@@ -1,4 +1,5 @@
 
+import java.awt.Component;
 import java.sql.*;
 import java.util.Scanner;
 import java.sql.Connection;
@@ -8,7 +9,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+
+//date
+import java.util.Date;  
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -27,14 +32,58 @@ public class Registration extends javax.swing.JFrame {
     private String c_acc;
     private String c_cash;
     
+    
+    private Component frame;
+    
 
     /**
      * Creates new form Registration
      */
     public Registration() {
         initComponents();
+        getNumber();
+        getAccount();
+        this.c_pwd = getToday();
     }
 
+    
+    
+    private void getNumber() {
+        
+        int rand = (int) (Math.random() * 98999999) + 1000000;
+        this.c_num = Integer.toString(rand);
+        rNumberField.setText(this.c_num);
+       
+    }
+    
+    private void getAccount(){
+                
+        long detail = System.currentTimeMillis() / 1000;
+        //long details = now.getTime()/1000;
+        Long IntDetail = Long.valueOf(this.c_num);
+        Long data =  detail + IntDetail;
+        this.c_acc = "DP"+ data;
+        rAccountField.setText(this.c_acc);
+    }
+    
+    private String getToday(){
+        Date d=new Date();
+        int year  =  d.getYear() - 100;
+        String pwd = ""+ d.getDate();
+        pwd += "" +d.getMonth();
+        pwd += "" +year;
+        return pwd;
+        
+    }
+    
+    private void clearFields(){
+        rAccountField.setText("");
+        rNameField.setText("");
+	rCashField.setText("");
+	rAccountField.setText("");
+	rNumberField.setText("");
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -54,6 +103,7 @@ public class Registration extends javax.swing.JFrame {
         CashLabel = new javax.swing.JLabel();
         rCashField = new javax.swing.JTextField();
         AddClientButton = new javax.swing.JButton();
+        AddClientButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -90,6 +140,7 @@ public class Registration extends javax.swing.JFrame {
         CashLabel.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         CashLabel.setText("Cash");
 
+        rCashField.setText("0.00");
         rCashField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 rCashFieldActionPerformed(evt);
@@ -104,15 +155,20 @@ public class Registration extends javax.swing.JFrame {
             }
         });
 
+        AddClientButton1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        AddClientButton1.setText("Menu");
+        AddClientButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                AddClientButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(RegistrationTextLabel))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(30, 30, 30)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -122,13 +178,22 @@ public class Registration extends javax.swing.JFrame {
                             .addComponent(CashLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 74, Short.MAX_VALUE))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(AddClientButton, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(rNumberField)
-                                .addComponent(rNameField, javax.swing.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE)
-                                .addComponent(rAccountField, javax.swing.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE)
-                                .addComponent(rCashField, javax.swing.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE)))))
-                .addContainerGap(71, Short.MAX_VALUE))
+                            .addComponent(rAccountField)
+                            .addComponent(rNumberField)
+                            .addComponent(rNameField)
+                            .addComponent(rCashField)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(RegistrationTextLabel))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(79, 79, 79)
+                                .addComponent(AddClientButton, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(AddClientButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 67, Short.MAX_VALUE)))
+                .addGap(26, 26, 26))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -152,7 +217,9 @@ public class Registration extends javax.swing.JFrame {
                     .addComponent(CashLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(rCashField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(33, 33, 33)
-                .addComponent(AddClientButton)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(AddClientButton)
+                    .addComponent(AddClientButton1))
                 .addContainerGap(54, Short.MAX_VALUE))
         );
 
@@ -161,11 +228,6 @@ public class Registration extends javax.swing.JFrame {
 
     private void rNumberFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rNumberFieldActionPerformed
         // TODO add your handling code here:
-        int rand = (int) (Math.random() * 89999999) + 10000000;
-        this.c_num = Integer.toString(rand);
-        
-       rNumberField.setText(this.c_num);
-       
     }//GEN-LAST:event_rNumberFieldActionPerformed
 
     private void rNameFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rNameFieldActionPerformed
@@ -174,12 +236,6 @@ public class Registration extends javax.swing.JFrame {
 
     private void rAccountFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rAccountFieldActionPerformed
         // TODO add your handling code here:
-        
-        long detail = System.currentTimeMillis() / 1000;
-        
-        String account = "DP"+( detail + this.c_num );
-        rAccountField.setText(account);
-        
     }//GEN-LAST:event_rAccountFieldActionPerformed
 
     private void rCashFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rCashFieldActionPerformed
@@ -193,32 +249,35 @@ public class Registration extends javax.swing.JFrame {
         String url = "jdbc:mysql://localhost/bank_system";
         String username = "root";
         String password = "";
-        Scanner scanner = new Scanner(System.in);
-             
-             
-             
+        Scanner scanner = new Scanner(System.in); 
              
         try (Connection conn = DriverManager.getConnection(url, username, password)){     
             String sql = "INSERT INTO users (FULLNAME, CLIENT_NUM, PASSWORD, ACCOUNT, CASH ) Values (?,?,?,?,?)";
                 PreparedStatement preparedStatement = conn.prepareStatement(sql);
                 preparedStatement.setString(1, rNameField.getText() );
                 preparedStatement.setString(2, rNumberField.getText() );
-                preparedStatement.setString(3, rAccountField.getText() );
+                preparedStatement.setString(3, this.c_pwd );
                 preparedStatement.setString(4, rAccountField.getText() );
                 preparedStatement.setString(5, rCashField.getText() );
 
                  
                 int rows = preparedStatement.executeUpdate();
                  
-                System.out.printf("%d rows added", rows);
+                System.out.printf("%d rows added", rows);;
+                JOptionPane.showMessageDialog(frame, "User has been added");
+                clearFields();
              } catch (SQLException ex) {
-                System.out.println("Connection failed...");
-
+                JOptionPane.showInputDialog(frame, "User has not been added");
+                clearFields();
                 System.out.println(ex);
                  
         }
    
     }//GEN-LAST:event_AddClientButtonActionPerformed
+
+    private void AddClientButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddClientButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_AddClientButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -258,6 +317,7 @@ public class Registration extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel AccountLabel;
     private javax.swing.JButton AddClientButton;
+    private javax.swing.JButton AddClientButton1;
     private javax.swing.JLabel CashLabel;
     private javax.swing.JLabel NameLabel;
     private javax.swing.JLabel NumberLabel;

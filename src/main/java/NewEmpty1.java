@@ -3,8 +3,10 @@ import java.util.Scanner;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
-
+import java.util.Date;  
  
 public class NewEmpty1{
     
@@ -79,9 +81,24 @@ public class NewEmpty1{
          }
     }
     
+    
+    
+public class JavaDateGetDateExample1 {  
+  
+} 
+    
     public static void main(String[] args) throws SQLException, ClassNotFoundException, InstantiationException, IllegalAccessException {
-                denis_example();
-
+        Date d=new Date();  
+        /*System.out.println("DAY  : "+d.getDate() );
+        System.out.println("Month  : "+d.getMonth() );  
+        System.out.println("Year  : "+d.getYear() );
+        */
+        int year  =  d.getYear() - 100;
+        String pwd = ""+ d.getDate();
+        pwd += "0" +d.getMonth();
+        pwd += "" +year;
+        
+        System.out.println("PWD = "+pwd);
     }
 
 }
