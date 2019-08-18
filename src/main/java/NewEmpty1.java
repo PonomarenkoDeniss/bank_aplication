@@ -1,21 +1,20 @@
 import java.sql.*;
 import java.util.Scanner;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 
  
 public class NewEmpty1{
-       
-    public static void main(String[] args) {
-     
-         try{
-             String url = "jdbc:mysql://localhost:3306/";
+    
+    
+    private static void denis_example(){
+        try{
+             String url = "jdbc:mysql://localhost/bank_system";
              String username = "root";
              String password = "";
              Scanner scanner = new Scanner(System.in);
-             
-             
-            
              
              /*
              Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
@@ -37,16 +36,17 @@ public class NewEmpty1{
              String cash = scanner.nextLine();
              */
              
-            String name = "Deniss Ponomarenko";
+            String name = "Slava Odinokov";
             
             int c_num = (int) (Math.random() * 89999999) + 10000000;
             
-            String pwd = "17082019";
             
-            long detail = System.currentTimeMillis();
+            String pwd = "18082019";
+            
+            long detail = System.currentTimeMillis() / 1000;
             String account = "DP"+( detail + c_num);
             
-            String cash = "33.58";            
+            String cash = "201.88";            
              
             System.out.println("name is " + name);
             System.out.println("c_num is " +c_num);
@@ -71,11 +71,17 @@ public class NewEmpty1{
                 System.out.printf("%d rows added", rows);
              }
          }
-         catch(SQLException ex){
+        
+        catch(SQLException ex){
              System.out.println("Connection failed...");
               
              System.out.println(ex);
          }
+    }
+    
+    public static void main(String[] args) throws SQLException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+                denis_example();
+
     }
 
 }
