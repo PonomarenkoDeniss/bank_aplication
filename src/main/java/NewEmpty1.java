@@ -59,14 +59,14 @@ public class NewEmpty1{
             
              try (Connection conn = DriverManager.getConnection(url, username, password)){
                   
-                String sql = "INSERT INTO users (FULLNAME, CLIENT_NUM, PASSWORD, ACCOUNT, CASH ) Values (?,?,?,?,?)";
+                String sql = "INSERT INTO users (FULLNAME, CLIENT_NUM, PASSWORD, ACCOUNT, CASH ) Values ('Test', '141414', '123', 'DP213', '33')";
                 PreparedStatement preparedStatement = conn.prepareStatement(sql);
-                preparedStatement.setString(1, name);
+                /*preparedStatement.setString(1, name);
                 preparedStatement.setInt(2, (int) c_num);
                 preparedStatement.setString(3, pwd);
                 preparedStatement.setString(4, account);
                 preparedStatement.setString(5,  cash);
-
+        */
                  
                 int rows = preparedStatement.executeUpdate();
                  
@@ -80,25 +80,9 @@ public class NewEmpty1{
              System.out.println(ex);
          }
     }
-    
-    
-    
-public class JavaDateGetDateExample1 {  
-  
-} 
-    
+
     public static void main(String[] args) throws SQLException, ClassNotFoundException, InstantiationException, IllegalAccessException {
-        Date d=new Date();  
-        /*System.out.println("DAY  : "+d.getDate() );
-        System.out.println("Month  : "+d.getMonth() );  
-        System.out.println("Year  : "+d.getYear() );
-        */
-        int year  =  d.getYear() - 100;
-        String pwd = ""+ d.getDate();
-        pwd += "0" +d.getMonth();
-        pwd += "" +year;
-        
-        System.out.println("PWD = "+pwd);
+        denis_example();
     }
 
 }
