@@ -56,7 +56,7 @@ public class Registration extends javax.swing.JFrame {
         
         int rand = (int) (Math.random() * 98999999) + 1000000;
         this.c_num = Integer.toString(rand);
-        rNumberField.setText(this.c_num);
+        NumberField.setText(this.c_num);
        
     }
     
@@ -67,7 +67,7 @@ public class Registration extends javax.swing.JFrame {
         Long IntDetail = Long.valueOf(this.c_num);
         Long data =  detail + IntDetail;
         this.c_acc = "DP"+ data;
-        rAccountField.setText(this.c_acc);
+        AccountField.setText(this.c_acc);
     }
     
     private String getToday(){
@@ -81,11 +81,11 @@ public class Registration extends javax.swing.JFrame {
     }
     
     private void clearFields(){
-        rAccountField.setText("");
+        
         rNameField.setText("");
 	rCashField.setText("");
-	rAccountField.setText("");
-	rNumberField.setText("");
+	AccountField.setText("");
+	NumberField.setText("");
     }
     
     /**
@@ -101,13 +101,13 @@ public class Registration extends javax.swing.JFrame {
         NameLabel = new javax.swing.JLabel();
         NumberLabel = new javax.swing.JLabel();
         AccountLabel = new javax.swing.JLabel();
-        rNumberField = new javax.swing.JTextField();
         rNameField = new javax.swing.JTextField();
-        rAccountField = new javax.swing.JTextField();
         CashLabel = new javax.swing.JLabel();
         rCashField = new javax.swing.JTextField();
         AddClientButton = new javax.swing.JButton();
         AddClientButton1 = new javax.swing.JButton();
+        AccountField = new javax.swing.JLabel();
+        NumberField = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -123,21 +123,9 @@ public class Registration extends javax.swing.JFrame {
         AccountLabel.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         AccountLabel.setText("Account");
 
-        rNumberField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rNumberFieldActionPerformed(evt);
-            }
-        });
-
         rNameField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 rNameFieldActionPerformed(evt);
-            }
-        });
-
-        rAccountField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rAccountFieldActionPerformed(evt);
             }
         });
 
@@ -145,6 +133,7 @@ public class Registration extends javax.swing.JFrame {
         CashLabel.setText("Cash");
 
         rCashField.setText("0.00");
+        rCashField.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         rCashField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 rCashFieldActionPerformed(evt);
@@ -167,6 +156,10 @@ public class Registration extends javax.swing.JFrame {
             }
         });
 
+        AccountField.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        NumberField.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -182,10 +175,10 @@ public class Registration extends javax.swing.JFrame {
                             .addComponent(CashLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 74, Short.MAX_VALUE))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(rAccountField)
-                            .addComponent(rNumberField)
                             .addComponent(rNameField)
-                            .addComponent(rCashField)))
+                            .addComponent(rCashField)
+                            .addComponent(AccountField, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(NumberField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -204,43 +197,37 @@ public class Registration extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(RegistrationTextLabel)
-                .addGap(26, 26, 26)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(NameLabel)
                     .addComponent(rNameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(31, 31, 31)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(rNumberField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(NumberField, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(NumberLabel))
-                .addGap(31, 31, 31)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(rAccountField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(AccountLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(CashLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(rCashField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(33, 33, 33)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(AddClientButton)
-                    .addComponent(AddClientButton1))
-                .addContainerGap(54, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(AccountLabel)
+                        .addGap(145, 145, 145)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(AddClientButton)
+                            .addComponent(AddClientButton1)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(AccountField, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(rCashField, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(CashLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(54, 54, 54))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void rNumberFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rNumberFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_rNumberFieldActionPerformed
-
     private void rNameFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rNameFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_rNameFieldActionPerformed
-
-    private void rAccountFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rAccountFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_rAccountFieldActionPerformed
 
     private void rCashFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rCashFieldActionPerformed
         // TODO add your handling code here:
@@ -259,9 +246,9 @@ public class Registration extends javax.swing.JFrame {
             String sql = "INSERT INTO users (FULLNAME, CLIENT_NUM, PASSWORD, ACCOUNT, CASH ) Values (?,?,?,?,?)";
                 PreparedStatement preparedStatement = conn.prepareStatement(sql);
                 preparedStatement.setString(1, rNameField.getText() );
-                preparedStatement.setString(2, rNumberField.getText() );
+                preparedStatement.setString(2, NumberField.getText() );
                 preparedStatement.setString(3, this.c_pwd );
-                preparedStatement.setString(4, rAccountField.getText() );
+                preparedStatement.setString(4, AccountField.getText() );
                 preparedStatement.setString(5, rCashField.getText() );
 
                  
@@ -271,7 +258,7 @@ public class Registration extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(frame, "User has been added");
                 clearFields();
              } catch (SQLException ex) {
-                JOptionPane.showInputDialog(frame, "User has not been added");
+                JOptionPane.showMessageDialog(frame, "User has not been added");
                 clearFields();
                 System.out.println(ex);
                  
@@ -319,16 +306,16 @@ public class Registration extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel AccountField;
     private javax.swing.JLabel AccountLabel;
     private javax.swing.JButton AddClientButton;
     private javax.swing.JButton AddClientButton1;
     private javax.swing.JLabel CashLabel;
     private javax.swing.JLabel NameLabel;
+    private javax.swing.JLabel NumberField;
     private javax.swing.JLabel NumberLabel;
     private javax.swing.JLabel RegistrationTextLabel;
-    private javax.swing.JTextField rAccountField;
     private javax.swing.JTextField rCashField;
     private javax.swing.JTextField rNameField;
-    private javax.swing.JTextField rNumberField;
     // End of variables declaration//GEN-END:variables
 }

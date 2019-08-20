@@ -63,7 +63,7 @@
                   </Group>
                   <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="CustomerNameField" max="32767" attributes="0"/>
+                      <Component id="CustomerNumberField" max="32767" attributes="0"/>
                       <Component id="CustomerPwdField" pref="147" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
@@ -88,7 +88,7 @@
                   <EmptySpace min="-2" pref="39" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="CustomerNameField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="CustomerNumberField" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
@@ -111,7 +111,7 @@
             <Property name="text" type="java.lang.String" value="Welcome to the Bank"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="CustomerNameField">
+        <Component class="javax.swing.JTextField" name="CustomerNumberField">
         </Component>
         <Component class="javax.swing.JPasswordField" name="CustomerPwdField">
         </Component>
