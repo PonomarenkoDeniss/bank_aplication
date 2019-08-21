@@ -14,42 +14,40 @@ public class Data {
     
     String result;
     
-    private String run_sql_select(String sql){
+ void exec_sql(String sql){
         try{
              String url = "jdbc:mysql://localhost/bank_system";
              String username = "root";
              String password = "";
-             Scanner scanner = new Scanner(System.in);
-
-            try (Connection conn = DriverManager.getConnection(url, username, password)){
+             
+             try (Connection conn = DriverManager.getConnection(url, username, password)){
                 PreparedStatement preparedStatement = conn.prepareStatement(sql);
-                ResultSet resultSet = preparedStatement.executeQuery();
-                while (resultSet.next()){
 
-                   this.result =  resultSet.getString(1) + " ";
-                   this.result +=  resultSet.getString(2);
-                }
-                System.out.println(result);
-            }
-        }
-            catch(SQLException ex){
-                 System.out.println("Connection failed...");
-                 System.out.println(ex);
-            }
-       return result;
+                int rows = preparedStatement.executeUpdate();
+                System.out.printf("the operation was successful");
+                JOptionPane.showMessageDialog(null,"The operation was successful.");
+             }
+         }
+        
+        catch(SQLException ex){
+             JOptionPane.showMessageDialog(null,"Error: '"+ex+"' " );
+         }
     }
     
-    
-    
-    public void SelectSQL(){       
-        String sql = "SELECT CLIENT_NUM, PASSWORD FROM users WHERE CLIENT_NUM = '" + this.number + "' AND PASSWORD = '"+  this.pwd +"' ;";
-        run_sql_select(sql);
-    } 
+   
 
-    //delete and update doesnt work - 19/08/2019
+    
     
     public static void main(String args[]) {
 
+    }
+
+    ResultSet preparedStatement() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    ResultSet executeQuery() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
 

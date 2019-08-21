@@ -1,6 +1,8 @@
 import javax.swing.JOptionPane;
 
 
+
+
 public class LoginFrame extends javax.swing.JFrame {
 
     /**
@@ -49,6 +51,7 @@ public class LoginFrame extends javax.swing.JFrame {
         return error;
     }
     
+      
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -155,10 +158,12 @@ public class LoginFrame extends javax.swing.JFrame {
         
         EmptyNumber();
         EmptyPassword();
+        
 
-        LoginSelect.pwd = GetCustomerPassword();
-        LoginSelect.number = GetCustomerNumber();
-        LoginSelect.SelectSQL();
+        
+        String sql = "SELECT CLIENT_NUM, PASSWORD FROM users WHERE CLIENT_NUM = '" + GetCustomerNumber() + "' AND PASSWORD = '"+  GetCustomerPassword() +"' ;";
+        LoginSelect.exec_sql(sql);
+        
         //if request is null
         if( LoginSelect.result == null ){
             JOptionPane.showMessageDialog(null,"User not found");
