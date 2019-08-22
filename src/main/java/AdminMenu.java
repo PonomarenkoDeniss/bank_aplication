@@ -1,4 +1,3 @@
-
 import java.util.Date;
 import javax.swing.JOptionPane;
 
@@ -365,7 +364,8 @@ public class AdminMenu extends javax.swing.JFrame {
 
     private void UpdateActionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UpdateActionActionPerformed
         // TODO add your handling code here:
-
+        Data update = new Data();
+        String sql = "Update users SET FULLNAME = '" + CustomerName.getText() + "' where ID = '" + CustomerIDField.getText() + "' ";
     }//GEN-LAST:event_UpdateActionActionPerformed
 
     private void DeleteActionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteActionActionPerformed

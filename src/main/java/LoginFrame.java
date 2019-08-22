@@ -165,17 +165,20 @@ public class LoginFrame extends javax.swing.JFrame {
         LoginSelect.exec_sql(sql);
         
         //if request is null
-        if( LoginSelect.result == null ){
-            JOptionPane.showMessageDialog(null,"User not found");
-            ClearFields();
-        }
-        else{
-            JOptionPane.showMessageDialog(null,"OK");
-            ClearFields();
+        //if( LoginSelect.result == null ){
+           // JOptionPane.showMessageDialog(null,"User not found");
+          //  ClearFields();
+        //}
+        //else{
+            //JOptionPane.showMessageDialog(null,"OK");
+            
+            Client login = new Client();
+            login.setVisible(true);
+            //ClearFields();
             //Client customer = new Client();
             //setVisible(true);
             setDefaultCloseOperation(LoginFrame.EXIT_ON_CLOSE);
-        }
+        //}
         
     }//GEN-LAST:event_LoginButtonActionPerformed
 
