@@ -1,8 +1,5 @@
 import javax.swing.JOptionPane;
 
-
-
-
 public class LoginFrame extends javax.swing.JFrame {
 
     /**
@@ -44,13 +41,7 @@ public class LoginFrame extends javax.swing.JFrame {
         }
         return error;
     }
-    
-    
-    
-    
-    
-      
-
+  
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -157,30 +148,14 @@ public class LoginFrame extends javax.swing.JFrame {
         EmptyNumber();
         EmptyPassword();
         
-        Data hash = new Data();
-        
-        String Password = hash.GetHashingPassword(CustomerPwdField.getText());
-        
-
-        
+        String Password = LoginSelect.GetHashingPassword(CustomerPwdField.getText());
         String sql = "SELECT * FROM users WHERE CLIENT_NUM = '" + GetCustomerNumber() + "' AND PASSWORD = '"+  Password +"' ;";
         LoginSelect.exec_sql(sql);
+
+        Client login = new Client();
+        login.setVisible(true);
+        dispose();
         
-        //if request is null
-        //if( LoginSelect.result == null ){
-           // JOptionPane.showMessageDialog(null,"User not found");
-          //  ClearFields();
-        //}
-        //else{
-            //JOptionPane.showMessageDialog(null,"OK");
-            
-            Client login = new Client();
-            login.setVisible(true);
-            //ClearFields();
-            //Client customer = new Client();
-            //setVisible(true);
-            setDefaultCloseOperation(LoginFrame.EXIT_ON_CLOSE);
-        //}
         
     }//GEN-LAST:event_LoginButtonActionPerformed
 

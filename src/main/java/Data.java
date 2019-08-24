@@ -3,42 +3,39 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.ResultSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 //import for hashing
 import org.apache.commons.codec.digest.DigestUtils;
 
 public class Data {
-    
+   
     public String number;
     public String pwd;
     
     String result;
     
- void exec_sql(String sql){
+ public static void exec_sql(String sql){
         try{
              String url = "jdbc:mysql://localhost/bank_system";
              String username = "root";
              String password = "";
              
              try (Connection conn = DriverManager.getConnection(url, username, password)){
-                PreparedStatement preparedStatement = conn.prepareStatement(sql);
-
-                int rows = preparedStatement.executeUpdate();
-                System.out.printf("the operation was successful");
-                JOptionPane.showMessageDialog(null,"The operation was successful.");
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(sql);
              }
          }
         
         catch(SQLException ex){
-             //JOptionPane.showMessageDialog(null,"Error: '"+ex+"' " );
+             JOptionPane.showMessageDialog(null,"Error: '"+ex+"' " );
          }
     }
- 
      
     public static String PasswordHash(String password) {
         String md5Hex = DigestUtils.md5Hex(password);
-        System.out.print(md5Hex);
         return md5Hex;
     }
     
@@ -47,20 +44,35 @@ public class Data {
         return Password;
     }
     
-   
+    public static void return_rset() throws SQLException {
+        
+        String url = "jdbc:mysql://localhost/bank_system";
+        String username = "root";
+        String password = "";
+        
+        Connection conn = DriverManager.getConnection(url, username, password);
+        Statement stmt = conn.createStatement();
+        ResultSet rset = stmt.executeQuery ("SELECT * FROM users where ID=5" );
+        
+        ResultSetMetaData rsmd = rset.getMetaData();
+        int columnCount = rsmd.getColumnCount();
 
-    
+        for (int i = 1; i <= columnCount; i++){
+            String col_name = rsmd.getColumnName(i);
+            System.out.println(col_name);
+        }
+            
+
+        String result = String.valueOf(rset);
+        System.out.print(result);
+  }
     
     public static void main(String args[]) {
-
+        try {
+            return_rset();
+        } catch (SQLException ex) {
+            Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
-    ResultSet preparedStatement() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    ResultSet executeQuery() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 }
-
