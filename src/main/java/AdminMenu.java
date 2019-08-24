@@ -1,5 +1,6 @@
 import java.util.Date;
 import javax.swing.JOptionPane;
+import javax.swing.JCheckBox;
 
 
 /*
@@ -31,7 +32,7 @@ public class AdminMenu extends javax.swing.JFrame {
         //Fill fields
         setNumber();
         setAccount();
-        getToday();
+        getToday();        
     }
 
     private void ClearFields(){
@@ -73,13 +74,30 @@ public class AdminMenu extends javax.swing.JFrame {
         Date d=new Date();
         int year  =  d.getYear() - 100;
         this.Password = ""+ d.getDate();
-        this.Password += "0" +d.getMonth();
+        
+        if( d.getMonth() < 10 ){
+            this.Password += "0" +d.getMonth();
+        }else{this.Password += "" +d.getMonth();}
+       
         this.Password += "" +year;
         CustomerPasswordField.setText(this.Password);        
     }
     
     private void HelloAdmin(){
         HelloAdminLabel.setText("Admin - " +this.AdminName);
+    }
+    
+     
+    private int CheckAdminStatus(){
+        boolean status = StatusField.isSelected();
+        int admin = 0;
+        
+        if(status){
+            admin = 1;
+        }else{
+            admin = 0;
+        }
+        return admin;
     }
     
     
@@ -107,7 +125,7 @@ public class AdminMenu extends javax.swing.JFrame {
         AddAction = new javax.swing.JButton();
         UpdateAction = new javax.swing.JButton();
         DeleteAction = new javax.swing.JButton();
-        ChangeAction = new javax.swing.JButton();
+        ResetCustomerPassword = new javax.swing.JButton();
         ClearFieldsButton = new javax.swing.JRadioButton();
         StatusField = new javax.swing.JCheckBox();
         jLabel1 = new javax.swing.JLabel();
@@ -181,9 +199,14 @@ public class AdminMenu extends javax.swing.JFrame {
             }
         });
 
-        ChangeAction.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        ChangeAction.setText("Password");
-        ChangeAction.setBorder(new javax.swing.border.MatteBorder(null));
+        ResetCustomerPassword.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        ResetCustomerPassword.setText("Password");
+        ResetCustomerPassword.setBorder(new javax.swing.border.MatteBorder(null));
+        ResetCustomerPassword.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ResetCustomerPasswordActionPerformed(evt);
+            }
+        });
 
         ClearFieldsButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -215,7 +238,7 @@ public class AdminMenu extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(DeleteAction, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(ChangeAction))
+                        .addComponent(ResetCustomerPassword))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(StatusLabel)
@@ -285,7 +308,7 @@ public class AdminMenu extends javax.swing.JFrame {
                     .addComponent(AddAction)
                     .addComponent(UpdateAction)
                     .addComponent(DeleteAction)
-                    .addComponent(ChangeAction))
+                    .addComponent(ResetCustomerPassword))
                 .addGap(46, 46, 46))
         );
 
@@ -354,10 +377,16 @@ public class AdminMenu extends javax.swing.JFrame {
         // TODO add your handling code here:
    
         Data insert = new Data();
+        //insert into DB hashing pass
+        String pass = insert.GetHashingPassword( CustomerPasswordField.getText() );
+        //check admin status field
+        int isThisAdmin = CheckAdminStatus();
+        
+        //Is Name filed empty
         if( CustomerName.getText().equals(null) || CustomerName.getText().equals("") ){
             JOptionPane.showMessageDialog(null,"Name is empty. Please fill Name Field.");
         }else{
-            String sql = "INSERT INTO users (FULLNAME, CLIENT_NUM, PASSWORD, ACCOUNT, CASH ) Values ('"+CustomerName.getText()+"','"+ClientNumberField.getText()+"','"+CustomerPasswordField.getText()+"','"+CustomerAccountField.getText()+"','"+CustomerCashField.getText()+"')";
+            String sql = "INSERT INTO users (FULLNAME, CLIENT_NUM, PASSWORD, ACCOUNT, CASH, ADMIN ) Values ('"+CustomerName.getText()+"','"+ClientNumberField.getText()+"','"+ pass +"','"+CustomerAccountField.getText()+"','"+CustomerCashField.getText() +"','"+ isThisAdmin +"')";
             insert.exec_sql(sql);
         }
     }//GEN-LAST:event_AddActionActionPerformed
@@ -379,8 +408,15 @@ public class AdminMenu extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_DeleteActionActionPerformed
 
+    private void ResetCustomerPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ResetCustomerPasswordActionPerformed
+        // TODO add your handling code here:
+        getToday();
+    }//GEN-LAST:event_ResetCustomerPasswordActionPerformed
+
 
     public static void main(String args[]) {
+
+        
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -403,7 +439,6 @@ public class AdminMenu extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(AdminMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -418,7 +453,6 @@ public class AdminMenu extends javax.swing.JFrame {
     private javax.swing.JLabel AccountLabel;
     private javax.swing.JButton AddAction;
     private javax.swing.JLabel CashLabel;
-    private javax.swing.JButton ChangeAction;
     private javax.swing.JRadioButton ClearFieldsButton;
     private javax.swing.JLabel ClientNumberField;
     private javax.swing.JLabel CustomerAccountField;
@@ -431,6 +465,7 @@ public class AdminMenu extends javax.swing.JFrame {
     private javax.swing.JLabel NameLabel;
     private javax.swing.JLabel NumberLabel;
     private javax.swing.JLabel PasswordLabel;
+    private javax.swing.JButton ResetCustomerPassword;
     private javax.swing.JCheckBox StatusField;
     private javax.swing.JLabel StatusLabel;
     private javax.swing.JLabel Theme;

@@ -5,6 +5,9 @@ import java.sql.SQLException;
 import java.sql.ResultSet;
 import javax.swing.JOptionPane;
 
+//import for hashing
+import org.apache.commons.codec.digest.DigestUtils;
+
 public class Data {
     
     public String number;
@@ -30,6 +33,18 @@ public class Data {
         catch(SQLException ex){
              //JOptionPane.showMessageDialog(null,"Error: '"+ex+"' " );
          }
+    }
+ 
+     
+    public static String PasswordHash(String password) {
+        String md5Hex = DigestUtils.md5Hex(password);
+        System.out.print(md5Hex);
+        return md5Hex;
+    }
+    
+    public String GetHashingPassword( String pwd){
+        String Password = PasswordHash(pwd);
+        return Password;
     }
     
    

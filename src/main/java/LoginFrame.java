@@ -18,13 +18,7 @@ public class LoginFrame extends javax.swing.JFrame {
         System.out.print(number);
         return number;
     }
-    
-    public String GetCustomerPassword(){
-        
-        String pwd =  CustomerPwdField.getText();
-        System.out.print(pwd);
-        return pwd;
-    }
+
     void ClearFields(){
         
         CustomerNumberField.setText("");
@@ -50,6 +44,10 @@ public class LoginFrame extends javax.swing.JFrame {
         }
         return error;
     }
+    
+    
+    
+    
     
       
 
@@ -159,9 +157,13 @@ public class LoginFrame extends javax.swing.JFrame {
         EmptyNumber();
         EmptyPassword();
         
+        Data hash = new Data();
+        
+        String Password = hash.GetHashingPassword(CustomerPwdField.getText());
+        
 
         
-        String sql = "SELECT CLIENT_NUM, PASSWORD FROM users WHERE CLIENT_NUM = '" + GetCustomerNumber() + "' AND PASSWORD = '"+  GetCustomerPassword() +"' ;";
+        String sql = "SELECT * FROM users WHERE CLIENT_NUM = '" + GetCustomerNumber() + "' AND PASSWORD = '"+  Password +"' ;";
         LoginSelect.exec_sql(sql);
         
         //if request is null

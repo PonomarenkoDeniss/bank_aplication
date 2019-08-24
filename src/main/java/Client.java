@@ -9,13 +9,50 @@
  * @author User
  */
 public class Client extends javax.swing.JFrame {
-
+    private String name;
+    private String number;
+    private String pwd;
+    private String acc;
+    private String cash;
+    private String id;
+    private boolean admin;
     /**
      * Creates new form Client
      */
     public Client() {
         initComponents();
     }
+    
+    
+    public void SetCustomerID( String id ){
+        this.id = id;
+    }
+    
+    public void SetCustomerName( String name ){
+        this.name = name;
+    }
+    
+    public void SetCustomerNumber(String number){
+        this.number = number;
+    }
+    
+    public void SetCustomerPassword(String password){
+        this.pwd = password;
+    }
+    
+    public void SetCustomerAccount(String account){
+        this.acc = account;
+    }
+    public void SetCustomerBalance(String cash){
+        this.cash = cash;
+    }
+    
+    public void SetCustomerAdmin(boolean Admin){
+        this.admin = Admin;
+    }
+    
+    
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -103,4 +140,6 @@ public class Client extends javax.swing.JFrame {
     private javax.swing.JLabel C_name;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
+
+
 }

@@ -45,23 +45,29 @@ public class NewEmpty1{
     
     
     public static String md5Apache(String password) {
+        
         String md5Hex = DigestUtils.md5Hex(password);
         System.out.print(md5Hex);
         return md5Hex;
     }
     
-    //
+    
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException, InstantiationException, IllegalAccessException {
-    String password = "22082019";
+    String password = "241019";
 
-    System.out.println("Custom MD5:");
+    System.out.println("241019:");
     md5Apache(password);
+    
+
     
     //2400b037f667be75796aa6c86979f37e      22/08/2019
     //2400b037f667be75796aa6c86979f37e      22/08/2019
     
     //e9242d91fd9a80d37964f5200da0f779
+    
+    //af3ad7166f70d48d304d8231e891f084      32sym
+    
     
     }
 
