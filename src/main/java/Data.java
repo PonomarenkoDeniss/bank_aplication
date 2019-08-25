@@ -14,8 +14,7 @@ public class Data {
    
     public String number;
     public String pwd;
-    
-    String result;
+
     
  public static void exec_sql(String sql){
         try{
@@ -25,7 +24,8 @@ public class Data {
              
              try (Connection conn = DriverManager.getConnection(url, username, password)){
                 Statement stmt = conn.createStatement();
-                ResultSet rs = stmt.executeQuery(sql);
+                PreparedStatement preparedStmt = conn.prepareStatement(sql);
+                preparedStmt.executeUpdate();
              }
          }
         
@@ -33,7 +33,7 @@ public class Data {
              JOptionPane.showMessageDialog(null,"Error: '"+ex+"' " );
          }
     }
-     
+
     public static String PasswordHash(String password) {
         String md5Hex = DigestUtils.md5Hex(password);
         return md5Hex;
@@ -54,6 +54,7 @@ public class Data {
         Statement stmt = conn.createStatement();
         ResultSet rset = stmt.executeQuery ("SELECT * FROM users where ID=5" );
         
+        /*  
         ResultSetMetaData rsmd = rset.getMetaData();
         int columnCount = rsmd.getColumnCount();
 
@@ -61,11 +62,13 @@ public class Data {
             String col_name = rsmd.getColumnName(i);
             System.out.println(col_name);
         }
-            
+        */ 
 
         String result = String.valueOf(rset);
         System.out.print(result);
   }
+    
+    
     
     public static void main(String args[]) {
         try {

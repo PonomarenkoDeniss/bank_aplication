@@ -25,7 +25,7 @@ public class LoginFrame extends javax.swing.JFrame {
     private int EmptyNumber(){
         
         int error = 0;
-        if( CustomerNumberField.getText().equals(null) || CustomerNumberField.getText().equals("")){
+        if( CustomerNumberField.getText().equals("")){
             JOptionPane.showMessageDialog(null,"Customer number is empty");
             error = 1;
         }
@@ -35,7 +35,7 @@ public class LoginFrame extends javax.swing.JFrame {
     private int EmptyPassword(){
         
         int error = 0;
-         if( CustomerPwdField.getText().equals(null) || CustomerPwdField.getText().equals("") ){
+         if( CustomerPwdField.getText().equals("") ){
             JOptionPane.showMessageDialog(null,"Password is empty");
             error = 1;
         }

@@ -383,11 +383,13 @@ public class AdminMenu extends javax.swing.JFrame {
         int isThisAdmin = CheckAdminStatus();
         
         //Is Name filed empty
-        if( CustomerName.getText().equals(null) || CustomerName.getText().equals("") ){
+        if( CustomerName.getText().equals("") ){
             JOptionPane.showMessageDialog(null,"Name is empty. Please fill Name Field.");
         }else{
             String sql = "INSERT INTO users (FULLNAME, CLIENT_NUM, PASSWORD, ACCOUNT, CASH, ADMIN ) Values ('"+CustomerName.getText()+"','"+ClientNumberField.getText()+"','"+ pass +"','"+CustomerAccountField.getText()+"','"+CustomerCashField.getText() +"','"+ isThisAdmin +"')";
             insert.exec_sql(sql);
+            JOptionPane.showMessageDialog(null,"User added");
+            ClearFields();
         }
     }//GEN-LAST:event_AddActionActionPerformed
 
@@ -401,7 +403,7 @@ public class AdminMenu extends javax.swing.JFrame {
         // TODO add your handling code here:
         Data delete = new Data();
         if( CustomerIDField.getText().equals(null) || CustomerIDField.getText().equals("") ){
-            JOptionPane.showMessageDialog(null,"ID is empty. Please fill Name Field.");
+            JOptionPane.showMessageDialog(null,"ID is empty. Please edit ID field.");
         }else{
             String sql = "DELETE FROM users WHERE ID = '" + CustomerIDField.getText() + "'";
             delete.exec_sql(sql);

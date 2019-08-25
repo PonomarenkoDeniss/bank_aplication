@@ -1,9 +1,15 @@
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.commons.codec.digest.DigestUtils;
 
  
 public class NewEmpty1{
-    
+    private double cash;
     
    /* private static void denis_example(){
         try{
@@ -51,24 +57,28 @@ public class NewEmpty1{
         return md5Hex;
     }
     
+    public void test(){
+        try {
+            String url = "jdbc:mysql://localhost/bank_system";
+            String username = "root";
+            String password = "";
+            
+            Connection conn = DriverManager.getConnection(url, username, password);
+            Statement stmt = conn.createStatement();
+            ResultSet rset = stmt.executeQuery ("SELECT CASH FROM users where ID=" + this.cash + "" );
+            
+            String money = rset.getString("CASH");
+            this.cash = Double.valueOf(money);
+            System.out.println(this.cash);
+        } catch (SQLException ex) {
+            Logger.getLogger(NewEmpty1.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     
 
-    public static void main(String[] args) throws SQLException, ClassNotFoundException, InstantiationException, IllegalAccessException {
-    String password = "241019";
-
-    System.out.println("241019:");
-    md5Apache(password);
+    public static void main(String[] args)  {
     
-
-    
-    //2400b037f667be75796aa6c86979f37e      22/08/2019
-    //2400b037f667be75796aa6c86979f37e      22/08/2019
-    
-    //e9242d91fd9a80d37964f5200da0f779
-    
-    //af3ad7166f70d48d304d8231e891f084      32sym
-    
-    
+    md5Apache("jaf agapjgasgasgas gsa g1");
     }
 
 }
