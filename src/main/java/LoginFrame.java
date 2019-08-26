@@ -1,45 +1,106 @@
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 public class LoginFrame extends javax.swing.JFrame {
-
+    private int CustomerNumber;
+    private String CustomerPassword;
+    private int Error;
+    
+    public int ID;
+    private int ADMIN;
+    private String name;
+    
     /**
      * Creates new form LoginFrame
      */
+    
     public LoginFrame() {
         initComponents();
     }
     
-    public String GetCustomerNumber(){
-        
-        String number =  CustomerNumberField.getText();
-        System.out.print(number);
-        return number;
+    private void GetCustomerNumber(){
+        String Number =  CustomerNumberField.getText();
+        this.CustomerNumber = Integer.valueOf(Number);
     }
-
+    
+    private void GetCustomerPassword(){
+        this.CustomerPassword =  CustomerPwdField.getText();
+    }
     void ClearFields(){
-        
         CustomerNumberField.setText("");
         CustomerPwdField.setText("");
     }
-    
-    private int EmptyNumber(){
-        
-        int error = 0;
+    private void EmptyNumber(){
         if( CustomerNumberField.getText().equals("")){
-            JOptionPane.showMessageDialog(null,"Customer number is empty");
-            error = 1;
+            this.Error = 1;
         }
-        return error;
+    }
+    private void EmptyPassword(){
+         if( CustomerPwdField.getText().equals("") ){
+           this.Error = 2;
+        }
+    }
+    //errors code & text
+    private void ReturnErrorText(){
+        switch(this.Error){
+            case 1 :
+                JOptionPane.showMessageDialog(null, "Customer number is empty", "Error", JOptionPane.ERROR_MESSAGE);
+                break;
+            case 2 :
+                JOptionPane.showMessageDialog(null, "Password is empty", "Error", JOptionPane.ERROR_MESSAGE);
+                break;
+            case 3 :
+                JOptionPane.showMessageDialog(null,"Something went wrong");
+                break;
+            case 4:
+                JOptionPane.showMessageDialog(null,"Welcome to the DP Bank!");
+                break;
+        }
+    }
+    //hashing password 
+    private void HashingPassword(){
+        Data d = new Data();
+        this.CustomerPassword = d.GetHashingPassword(this.CustomerPassword);
     }
     
-    private int EmptyPassword(){
-        
-        int error = 0;
-         if( CustomerPwdField.getText().equals("") ){
-            JOptionPane.showMessageDialog(null,"Password is empty");
-            error = 1;
+    private void GetDataFromDb() {
+        try {
+            String url = "jdbc:mysql://localhost/bank_system";
+            String username = "root";
+            String password = "";
+            
+            Connection conn = DriverManager.getConnection(url, username, password);
+            Statement stmt = conn.createStatement();
+            ResultSet rset = stmt.executeQuery ("SELECT ID, ADMIN from users where CLIENT_NUM = '" + this.CustomerNumber + "' AND PASSWORD = '" + this.CustomerPassword + "' " );
+            while(rset.next()){
+                this.ID = Integer.valueOf( rset.getString("ID") );
+                this.ADMIN = Integer.valueOf( rset.getString("ADMIN") );
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DepositFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return error;
+    }
+    
+    
+    private void CheckAdmin(){
+        if( this.ADMIN == 1 ){
+            AdminMenu admin = new AdminMenu();
+            admin.setVisible(true);
+            dispose();
+        }
+        else if( this.ADMIN == 0 ){
+            Client client = new Client();
+            client.id = this.ID;
+            client.setVisible(true);
+            dispose();
+        }
+        this.Error = 4;
     }
   
     @SuppressWarnings("unchecked")
@@ -123,7 +184,7 @@ public class LoginFrame extends javax.swing.JFrame {
                     .addComponent(jLabel3))
                 .addGap(28, 28, 28)
                 .addComponent(LoginButton)
-                .addContainerGap(45, Short.MAX_VALUE))
+                .addContainerGap(23, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -134,27 +195,31 @@ public class LoginFrame extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void LoginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoginButtonActionPerformed
-        // TODO add your handling code here:
-        
-        Data LoginSelect = new Data();
-        
         EmptyNumber();
         EmptyPassword();
         
-        String Password = LoginSelect.GetHashingPassword(CustomerPwdField.getText());
-        String sql = "SELECT * FROM users WHERE CLIENT_NUM = '" + GetCustomerNumber() + "' AND PASSWORD = '"+  Password +"' ;";
-        LoginSelect.exec_sql(sql);
-
-        Client login = new Client();
-        login.setVisible(true);
-        dispose();
+        GetCustomerNumber();
+        GetCustomerPassword();
+        HashingPassword();
+               
+        GetDataFromDb();
+        
+        System.out.println("LOGIN->ID->" + this.ID);
+        System.out.println("LOGIN->ADMIN->" + this.ADMIN);
+        System.out.println("-----------------------------------");
+        
+        CheckAdmin();
+        ReturnErrorText();
         
         
     }//GEN-LAST:event_LoginButtonActionPerformed

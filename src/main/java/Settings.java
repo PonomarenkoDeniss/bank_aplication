@@ -1,6 +1,7 @@
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -20,9 +21,9 @@ import javax.swing.JOptionPane;
  * @author User
  */
 public class Settings extends javax.swing.JFrame {
-    private String OldPassword;
+    public String OldPassword;
     private String NewPassword;
-    private int id = 28;
+    public int id;
     
     private String sql;
     /**
@@ -30,25 +31,8 @@ public class Settings extends javax.swing.JFrame {
      */
     public Settings() {
         initComponents();
+        System.out.println("SETTINGS->ID->  " + this.id);
     }
-    
-        private void getPasswordFromDb() {
-        try {
-            String url = "jdbc:mysql://localhost/bank_system";
-            String username = "root";
-            String password = "";
-            
-            Connection conn = DriverManager.getConnection(url, username, password);
-            Statement stmt = conn.createStatement();
-            ResultSet rset = stmt.executeQuery ("SELECT PASSWORD FROM users where ID=" + this.id + "" );
-            while(rset.next()){
-                this.OldPassword = rset.getString("PASSWORD");
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(DepositFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
     
     private void getPasswordFiled(){
         Data check_pwd = new Data();
@@ -66,10 +50,24 @@ public class Settings extends javax.swing.JFrame {
         this.NewPassword = hash_new_pwd.GetHashingPassword( NewPasswordFiled.getText() );
     }
     
-    private void ChengePassword(){
-        this.sql = "Update users SET PASSWORD = " +  this.NewPassword + " where ID = " + this.id + "";
-    }
+
     
+        private void PasswordChange() {
+        try {
+            String url = "jdbc:mysql://localhost/bank_system";
+            String username = "root";
+            String password = "";
+            Connection conn = DriverManager.getConnection(url, username, password);
+            PreparedStatement stmt = (PreparedStatement) conn.createStatement();
+            this.sql = "Update users SET PASSWORD = " +  this.NewPassword + " where ID = " + this.id + "" ;
+            stmt.executeUpdate(this.sql);
+            String res = String.valueOf(stmt);
+            System.out.print(res);
+        } catch (SQLException ex) {
+            Logger.getLogger(DepositFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
     
     
     
@@ -157,12 +155,11 @@ public class Settings extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         Data update = new Data();
         
-        getPasswordFromDb();
         getPasswordFiled();
         GetNewPassword();
         
         //execute sql
-        ChengePassword();
+        PasswordChange();
         Data.exec_sql(this.sql);
         
         dispose();

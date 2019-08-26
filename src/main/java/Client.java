@@ -1,3 +1,12 @@
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -12,19 +21,30 @@ public class Client extends javax.swing.JFrame {
     private String name;
     private String number;
     private String pwd;
-    private String acc = "DP1644148452";
-    private double cash = 1000.24;
-    private String id;
-    private int admin;
+    private String acc;
+    private double cash;
+    public static int id ;
+    
     /**
      * Creates new form Client
      */
     public Client() {
         initComponents();
+        
+        SetID();
+        //GetCustomerData();
+
         FillAccountField();
         FillBalanceField();
         
+        System.out.println("CLIENT->ID->  " + this.id);
+        System.out.println("CLIENT->Name  " + this.name);
+        System.out.println("CLIENT->Account " + this.acc);
+        System.out.println("CLIENT->Cash " + this.cash);
+        System.out.println("CLIENT->Number "+ this.number);
+        
     }
+
     
     private void FillAccountField(){
         CustomerAccountField.setText(this.acc);
@@ -33,34 +53,33 @@ public class Client extends javax.swing.JFrame {
         CustomerBalanceField.setText(Double.toString(this.cash));
     }
     
-    public void SetCustomerID( String id ){
-        this.id = id;
+    private void SetID(){
+        LoginFrame log = new LoginFrame();
+        this.id = log.ID;
     }
-    
-    public void SetCustomerName( String name ){
-        this.name = name;
+
+        private void GetCustomerData() {
+        try {
+            String url = "jdbc:mysql://localhost/bank_system";
+            String username = "root";
+            String password = "";
+            
+            Connection conn = DriverManager.getConnection(url, username, password);
+            Statement stmt = conn.createStatement();
+            ResultSet rset = stmt.executeQuery ("SELECT * FROM users where ID = " + this.id + "" );
+            while(rset.next()){
+                this.name = rset.getString("FULLNAME");
+                this.number = rset.getString("CLIENT_NUM");
+                this.pwd = rset.getString("PASSWORD");
+                this.acc = rset.getString("ACCOUNT");
+                String money = rset.getString("CASH");
+                this.cash = Double.valueOf(money);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DepositFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
-    
-    public void SetCustomerNumber(String number){
-        this.number = number;
-    }
-    
-    public void SetCustomerPassword(String password){
-        this.pwd = password;
-    }
-    
-    public void SetCustomerAccount(String account){
-        this.acc = account;
-    }
-    public void SetCustomerBalance(double cash){
-        this.cash = cash;
-    }
-    
-    public void SetCustomerAdmin(int Admin){
-        this.admin = Admin;
-    }
-    
-    
 
 
     /**
@@ -216,6 +235,8 @@ public class Client extends javax.swing.JFrame {
 
     private void SettingsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SettingsButtonActionPerformed
         Settings changePassword = new Settings();
+        changePassword.OldPassword = this.pwd;
+        changePassword.id = Client.id;
         changePassword.setVisible(true);
     }//GEN-LAST:event_SettingsButtonActionPerformed
 
