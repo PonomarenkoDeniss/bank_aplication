@@ -1,13 +1,9 @@
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /*
@@ -23,7 +19,7 @@ import javax.swing.JOptionPane;
 public class Settings extends javax.swing.JFrame {
     public String OldPassword;
     private String NewPassword;
-    public int id;
+    public static int id;
     
     private String sql;
     /**
@@ -31,7 +27,20 @@ public class Settings extends javax.swing.JFrame {
      */
     public Settings() {
         initComponents();
+        
+    }
+    public void setID( int ID ){
+        this.id = ID;
+    }
+    public void setOldPassword( String password ){
+        this.OldPassword = password;
+    }
+    public void EchoID(){
+        System.out.println("");
+        System.out.println("-------------------------------------");
         System.out.println("SETTINGS->ID->  " + this.id);
+        System.out.println("-------------------------------------");
+        System.out.println("");
     }
     
     private void getPasswordFiled(){
@@ -50,9 +59,7 @@ public class Settings extends javax.swing.JFrame {
         this.NewPassword = hash_new_pwd.GetHashingPassword( NewPasswordFiled.getText() );
     }
     
-
-    
-        private void PasswordChange() {
+    private void PasswordChange() {
         try {
             String url = "jdbc:mysql://localhost/bank_system";
             String username = "root";
@@ -61,8 +68,6 @@ public class Settings extends javax.swing.JFrame {
             PreparedStatement stmt = (PreparedStatement) conn.createStatement();
             this.sql = "Update users SET PASSWORD = " +  this.NewPassword + " where ID = " + this.id + "" ;
             stmt.executeUpdate(this.sql);
-            String res = String.valueOf(stmt);
-            System.out.print(res);
         } catch (SQLException ex) {
             Logger.getLogger(DepositFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -161,7 +166,6 @@ public class Settings extends javax.swing.JFrame {
         //execute sql
         PasswordChange();
         Data.exec_sql(this.sql);
-        
         dispose();
         
     }//GEN-LAST:event_jButton1ActionPerformed
