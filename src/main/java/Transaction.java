@@ -27,19 +27,17 @@ public class Transaction extends javax.swing.JFrame {
     String username = "root";
     String password = "";
     //*****************************************************************
-    
-    
-    
-    
-    
+        
     private int id;
     private String myAccount;
     private double myBeforeBalance;
     private double myAfterBalance;
 
+    private int receiverID;
     private String receiverName;
     private String receiverAccount;
     private double receiverBalance;
+    private double receiverAfterBalance;
     private String comment;
     private double amount;
     
@@ -74,10 +72,18 @@ public class Transaction extends javax.swing.JFrame {
     public void EchoData(){
         
         System.out.println("");
-        System.out.println("-------------------------------------");
+        System.out.println("----------Receiver data---------------");
         System.out.println("TRANSACTION->ID->  " + this.id);
         System.out.println("TRANSACTION->receiverName->  " + this.receiverName);
         System.out.println("TRANSACTION->receiverAccount-> " + this.receiverAccount);
+        System.out.println("----------Receiver data---------------");
+        
+        System.out.println("---------------SELECT SQL-----------------");
+        System.out.println("TRANSACTION->receiverID-> " + this.receiverID);
+        System.out.println("TRANSACTION->receiverBalance-> " + this.receiverBalance);
+        System.out.println("---------------SELECT SQL-----------------");
+        
+        System.out.println("-------------------------------------");
         System.out.println("TRANSACTION->comment-> " + this.comment);
         System.out.println("TRANSACTION->myBeforeBalance-> " + this.myBeforeBalance);
         System.out.println("TRANSACTION->amount-> " + this.amount);
@@ -120,7 +126,7 @@ public class Transaction extends javax.swing.JFrame {
         this.myAfterBalance = this.myBeforeBalance - this.amount;
     }
     private void ReceiverAfterBalance(){
-        this.receiverBalance = this.receiverBalance + this.amount;
+        this.receiverAfterBalance = this.receiverBalance + this.amount;
     }
     
     
@@ -128,54 +134,44 @@ public class Transaction extends javax.swing.JFrame {
     
     private void UpdateMyData(){
         Data exec = new Data();
-        String sql = "Update users SET CASH = " + this.myAfterBalance + " where ID = " + this.id + "";
+        String sql = "Update users SET CASH = " + this.myAfterBalance + " where ID = " + this.id + ";";
         exec.exec_sql(sql);
     }
-    
     private void UpdateReceiverData(){
         Data exec = new Data();
-        String sql = "Update users SET CASH = " + this.receiverBalance + " where FULLNAME = " + receiverName + " AND ACCOUNT = " + this.receiverAccount + "";
+        String sql = "Update users SET CASH = " + this.receiverAfterBalance + " where ID= " + this.receiverID + ";";
         exec.exec_sql(sql);
     }
-    
     private void InsertIntoForMe(){
         Data exec = new Data();
-        String sql = "INSERT INTO transaction (CLIENT_ACCAUNT, RECIPIENT, CASH, Comment, ACT ) Values ('" + this.myAccount + "','" + this.receiverAccount + "','" + this.amount + "','" + this.comment + "',Send);";
+        String Act = "Send";
+        String sql = "INSERT INTO transaction (CLIENT_ACCAUNT, RECIPIENT, CASH, Comment, ACT ) Values ('" + this.myAccount + "','" + this.receiverAccount + "','" + this.amount + "','" + this.comment + "','"+ Act +"');";
         exec.exec_sql(sql);
     }
         private void InsertIntoForRecipient(){
         Data exec = new Data();
-        String sql = "INSERT INTO transaction (CLIENT_ACCAUNT, RECIPIENT, CASH, Comment, ACT ) Values ('" + this.receiverAccount + "','" + this.myAccount + "','" + this.amount + "','" + this.comment + "',Received);";
+        String Act = "Received"; 
+        String sql = "INSERT INTO transaction (CLIENT_ACCAUNT, RECIPIENT, CASH, Comment, ACT ) Values ('" + this.receiverAccount + "','" + this.myAccount + "','" + this.amount + "','" + this.comment + "','"+ Act +"');";
         exec.exec_sql(sql);
     }
-    
-    
-    
-    
-    //Block 3
     private void GetCustomerData() {
         try {
-           
             Connection conn = DriverManager.getConnection(url, username, password);
             Statement stmt = conn.createStatement();
-            ResultSet rset = stmt.executeQuery ("SELECT FULLNAME, CASH FROM users where CLIENT_NUM = " + this.receiverAccount + " AND FULLNAME = " + this.receiverName + "" );
-            if( rset == null){
-                this.error = 6;                                                 //6 - receiver not found
-                System.out.println("TRANSACTION->GetCustomerData()->  RECEIVER NOT FOUND");
-            }else{
-                while(rset.next()){
-                    String balance = rset.getString("CASH");
-                    this.receiverBalance = Double.valueOf(balance);
-                }
+            ResultSet rset = stmt.executeQuery ("SELECT ID, CASH from users where FULLNAME = '" + this.receiverName + "' AND ACCOUNT = '" + this.receiverAccount + "' " );
+            while(rset.next()){
+                this.receiverID = Integer.valueOf( rset.getString("ID") );
+                this.receiverBalance = Double.valueOf( rset.getString("CASH") );
             }
         } catch (SQLException ex) {
             Logger.getLogger(DepositFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-   
     private void GetErrorText(){
         switch(this.error){
+            case 0: 
+                JOptionPane.showMessageDialog(null,"you transferred " + this.amount + "$ to " + this.receiverName + " ");
+                break;
             case 2:
                 JOptionPane.showMessageDialog(null,"Not valid amount");
                 break;
@@ -189,8 +185,12 @@ public class Transaction extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null,"User not found.");
                 break;
         }
+            Client client = new Client();
+            client.SetID(this.id);
+            client.CreateCustomerFrame();
+            client.setVisible(true);
+            dispose();
     }
-    
     public void DoTransaction(){
         //Set Data
         SetAmount();
@@ -202,6 +202,8 @@ public class Transaction extends javax.swing.JFrame {
         CheckValidData();
         CheckMyBalance();
         
+        
+        GetCustomerData();
         //do math operation
         MyAfterBalance();
         ReceiverAfterBalance();
@@ -216,10 +218,7 @@ public class Transaction extends javax.swing.JFrame {
         //sql requests - insert into 
         InsertIntoForMe();
         InsertIntoForRecipient();
-        
-        
     }
-    
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -230,13 +229,12 @@ public class Transaction extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        CommnetField = new javax.swing.JTextArea();
         AmountField = new javax.swing.JTextField();
         AccountField = new javax.swing.JTextField();
         NameField = new javax.swing.JTextField();
         MyAccountField = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        CommnetField = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -251,10 +249,6 @@ public class Transaction extends javax.swing.JFrame {
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel5.setText("Comment");
-
-        CommnetField.setColumns(20);
-        CommnetField.setRows(5);
-        jScrollPane1.setViewportView(CommnetField);
 
         MyAccountField.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
 
@@ -283,13 +277,16 @@ public class Transaction extends javax.swing.JFrame {
                             .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(34, 34, 34)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(NameField)
-                            .addComponent(AccountField, javax.swing.GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE)
-                                .addComponent(AmountField))))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(34, 34, 34)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(NameField)
+                                    .addComponent(AccountField)
+                                    .addComponent(AmountField, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(CommnetField, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jButton1)))
@@ -306,18 +303,18 @@ public class Transaction extends javax.swing.JFrame {
                     .addComponent(NameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(AccountField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
-                            .addComponent(AmountField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(18, 18, 18)
+                            .addComponent(AmountField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(AccountField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel5)
+                    .addComponent(CommnetField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(75, 75, 75)
                 .addComponent(jButton1)
                 .addContainerGap(30, Short.MAX_VALUE))
         );
@@ -340,6 +337,9 @@ public class Transaction extends javax.swing.JFrame {
         // TODO add your handling code here:
          DoTransaction();
          EchoData();
+         
+         
+         dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
@@ -380,7 +380,7 @@ public class Transaction extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField AccountField;
     private javax.swing.JTextField AmountField;
-    private javax.swing.JTextArea CommnetField;
+    private javax.swing.JTextField CommnetField;
     private javax.swing.JLabel MyAccountField;
     private javax.swing.JTextField NameField;
     private javax.swing.JButton jButton1;
@@ -389,6 +389,5 @@ public class Transaction extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 }
