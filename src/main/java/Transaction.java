@@ -4,6 +4,9 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,12 +25,14 @@ import javax.swing.JOptionPane;
  */
 public class Transaction extends javax.swing.JFrame {
     
-    //*****************************************************************
+    /*****************************************************************/
     String url = "jdbc:mysql://localhost/bank_system";
     String username = "root";
     String password = "";
-    //*****************************************************************
+    /*****************************************************************/
         
+    String TransactionTime;
+    
     private int id;
     private String myAccount;
     private double myBeforeBalance;
@@ -88,7 +93,13 @@ public class Transaction extends javax.swing.JFrame {
         System.out.println("TRANSACTION->myBeforeBalance-> " + this.myBeforeBalance);
         System.out.println("TRANSACTION->amount-> " + this.amount);
         System.out.println("TRANSACTION->myAccount-> " + this.myAccount);
+        
         System.out.println("-------------------------------------");
+        System.out.println("TRANSACTION->Time-> " + this.TransactionTime);
+        System.out.println("-------------------------------------");
+
+        
+        
         System.out.println("");
     }
     
@@ -129,6 +140,13 @@ public class Transaction extends javax.swing.JFrame {
         this.receiverAfterBalance = this.receiverBalance + this.amount;
     }
     
+    private void GetDataAndTime(){
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Calendar cal = Calendar.getInstance();
+        System.out.println(dateFormat.format(cal.getTime()));
+        this.TransactionTime =  dateFormat.format(cal.getTime());
+    }
+    
     
 
     
@@ -145,13 +163,13 @@ public class Transaction extends javax.swing.JFrame {
     private void InsertIntoForMe(){
         Data exec = new Data();
         String Act = "Send";
-        String sql = "INSERT INTO transaction (CLIENT_ACCAUNT, RECIPIENT, CASH, Comment, ACT ) Values ('" + this.myAccount + "','" + this.receiverAccount + "','" + this.amount + "','" + this.comment + "','"+ Act +"');";
+        String sql = "INSERT INTO transaction (CLIENT_ACCAUNT, RECIPIENT, CASH, Comment, ACT, Time ) Values ('" + this.myAccount + "','" + this.receiverAccount + "','" + this.amount + "','" + this.comment + "','"+ Act +"', '" + this.TransactionTime + "' );";
         exec.exec_sql(sql);
     }
         private void InsertIntoForRecipient(){
         Data exec = new Data();
         String Act = "Received"; 
-        String sql = "INSERT INTO transaction (CLIENT_ACCAUNT, RECIPIENT, CASH, Comment, ACT ) Values ('" + this.receiverAccount + "','" + this.myAccount + "','" + this.amount + "','" + this.comment + "','"+ Act +"');";
+        String sql = "INSERT INTO transaction (CLIENT_ACCAUNT, RECIPIENT, CASH, Comment, ACT, Time ) Values ('" + this.receiverAccount + "','" + this.myAccount + "','" + this.amount + "','" + this.comment + "','"+ Act +"' , '" + this.TransactionTime + "');";
         exec.exec_sql(sql);
     }
     private void GetCustomerData() {
@@ -198,12 +216,17 @@ public class Transaction extends javax.swing.JFrame {
         SetReceiver();
         SetComment();
         
+        //get now()
+        GetDataAndTime();
+        
+        
         //check data valid
         CheckValidData();
         CheckMyBalance();
         
         
         GetCustomerData();
+        
         //do math operation
         MyAfterBalance();
         ReceiverAfterBalance();
@@ -335,11 +358,9 @@ public class Transaction extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-         DoTransaction();
-         EchoData();
-         
-         
-         dispose();
+        DoTransaction();
+        EchoData();
+        dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
