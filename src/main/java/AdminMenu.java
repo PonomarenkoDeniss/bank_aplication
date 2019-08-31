@@ -1,6 +1,14 @@
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import javax.swing.JCheckBox;
+
 
 
 /*
@@ -14,7 +22,7 @@ import javax.swing.JCheckBox;
  * @author User
  */
 public class AdminMenu extends javax.swing.JFrame {
-    String AdminName = "Deniss";
+    public String AdminName;
     
     private String Name;
     private String Number;
@@ -27,22 +35,24 @@ public class AdminMenu extends javax.swing.JFrame {
      */
     public AdminMenu() {
         initComponents();
-        HelloAdmin();
-        
         //Fill fields
         setNumber();
         setAccount();
         getToday();        
     }
 
+    
+
+    
+    
     private void ClearFields(){
-        
+ 
         CustomerName.setText("");
         setNumber();
         getToday();
         setAccount();
         CustomerCashField.setText("0.00");
-        StatusField.setText("");
+        StatusField.setSelected(false);
         CustomerIDField.setText("");
     }
 
@@ -72,18 +82,19 @@ public class AdminMenu extends javax.swing.JFrame {
     //for default password
     private void getToday(){
         Date d=new Date();
-        int year  =  d.getYear() - 100;
+        int yearInt  =  d.getYear() - 100;
+        String year = "20" + yearInt;
         this.Password = ""+ d.getDate();
-        
+        int month = d.getMonth() +1;
         if( d.getMonth() < 10 ){
-            this.Password += "0" +d.getMonth();
+            this.Password += "0" + month;
         }else{this.Password += "" +d.getMonth();}
        
         this.Password += "" +year;
         CustomerPasswordField.setText(this.Password);        
     }
     
-    private void HelloAdmin(){
+    void HelloAdmin(){
         HelloAdminLabel.setText("Admin - " +this.AdminName);
     }
     
@@ -133,6 +144,7 @@ public class AdminMenu extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         HelloAdminLabel = new javax.swing.JLabel();
+        ExitButton = new javax.swing.JLabel();
 
         jScrollPane2.setViewportView(jTree1);
 
@@ -340,6 +352,13 @@ public class AdminMenu extends javax.swing.JFrame {
 
         HelloAdminLabel.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
 
+        ExitButton.setText("Exit");
+        ExitButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                ExitButtonMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -349,7 +368,10 @@ public class AdminMenu extends javax.swing.JFrame {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(27, 27, 27)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(HelloAdminLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(HelloAdminLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(ExitButton))
                     .addComponent(jScrollPane1))
                 .addContainerGap(22, Short.MAX_VALUE))
         );
@@ -357,7 +379,9 @@ public class AdminMenu extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(HelloAdminLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(HelloAdminLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ExitButton))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -413,7 +437,21 @@ public class AdminMenu extends javax.swing.JFrame {
     private void ResetCustomerPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ResetCustomerPasswordActionPerformed
         // TODO add your handling code here:
         getToday();
+        Data updatePass = new Data();
+        if( CustomerIDField.getText().equals(null) || CustomerIDField.getText().equals("") ){
+            JOptionPane.showMessageDialog(null,"ID is empty. Please edit ID field.");
+        }else{
+            String sql = "Update users SET PASSWORD = '" + updatePass.GetHashingPassword( CustomerPasswordField.getText() ) + "' where ID = '" + CustomerIDField.getText() + "' ";
+            updatePass.exec_sql(sql);
+        }
     }//GEN-LAST:event_ResetCustomerPasswordActionPerformed
+
+    private void ExitButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ExitButtonMouseClicked
+        // TODO add your handling code here:
+        LoginFrame login = new LoginFrame();
+        login.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_ExitButtonMouseClicked
 
 
     public static void main(String args[]) {
@@ -463,6 +501,7 @@ public class AdminMenu extends javax.swing.JFrame {
     private javax.swing.JTextField CustomerName;
     private javax.swing.JLabel CustomerPasswordField;
     private javax.swing.JButton DeleteAction;
+    private javax.swing.JLabel ExitButton;
     private javax.swing.JLabel HelloAdminLabel;
     private javax.swing.JLabel NameLabel;
     private javax.swing.JLabel NumberLabel;

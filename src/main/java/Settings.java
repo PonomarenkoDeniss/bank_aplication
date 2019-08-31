@@ -60,18 +60,10 @@ public class Settings extends javax.swing.JFrame {
     }
     
     private void PasswordChange() {
-        try {
-            String url = "jdbc:mysql://localhost/bank_system";
-            String username = "root";
-            String password = "";
-            Connection conn = DriverManager.getConnection(url, username, password);
-            PreparedStatement stmt = (PreparedStatement) conn.createStatement();
-            this.sql = "Update users SET PASSWORD = " +  this.NewPassword + " where ID = " + this.id + "" ;
-            stmt.executeUpdate(this.sql);
-        } catch (SQLException ex) {
-            Logger.getLogger(DepositFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        Data updatePass = new Data();
         
+        String sql = "Update users SET PASSWORD = '" + updatePass.GetHashingPassword( NewPasswordFiled.getText() ) + "' where ID = '" +  this.id + "' ";
+        updatePass.exec_sql(sql);   
     }
     
     
