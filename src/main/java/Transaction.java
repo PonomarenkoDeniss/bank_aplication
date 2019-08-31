@@ -1,4 +1,3 @@
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -223,8 +222,7 @@ public class Transaction extends javax.swing.JFrame {
         //check data valid
         CheckValidData();
         CheckMyBalance();
-        
-        
+        //Data from DB
         GetCustomerData();
         
         //do math operation

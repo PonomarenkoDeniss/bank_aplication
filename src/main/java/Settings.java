@@ -1,9 +1,3 @@
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /*
@@ -39,6 +33,7 @@ public class Settings extends javax.swing.JFrame {
         System.out.println("");
         System.out.println("-------------------------------------");
         System.out.println("SETTINGS->ID->  " + this.id);
+        System.out.println("SETTINGS->PASSWORD->  " + this.OldPassword);
         System.out.println("-------------------------------------");
         System.out.println("");
     }
