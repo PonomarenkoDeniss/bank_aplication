@@ -59,10 +59,6 @@ public class AdminMenu extends javax.swing.JFrame {
         StatusField.setSelected(false);
         CustomerIDField.setText("");
     }
-
-
-     
-    
     //create customer number
     private void setNumber() {
         
@@ -71,7 +67,6 @@ public class AdminMenu extends javax.swing.JFrame {
         ClientNumberField.setText(this.Number);
        
     }
-    
     
     private void setAccount(){
                 
@@ -102,7 +97,6 @@ public class AdminMenu extends javax.swing.JFrame {
         HelloAdminLabel.setText("Admin - " +this.AdminName);
     }
     
-     
     private int CheckAdminStatus(){
         boolean status = StatusField.isSelected();
         int admin = 0;
@@ -114,8 +108,6 @@ public class AdminMenu extends javax.swing.JFrame {
         }
         return admin;
     }
-    
-    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {

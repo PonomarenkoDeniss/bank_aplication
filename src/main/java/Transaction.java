@@ -162,13 +162,13 @@ public class Transaction extends javax.swing.JFrame {
     private void InsertIntoForMe(){
         Data exec = new Data();
         String Act = "Send";
-        String sql = "INSERT INTO transaction (CLIENT_ACCAUNT, RECIPIENT, CASH, Comment, ACT, Time ) Values ('" + this.myAccount + "','" + this.receiverAccount + "','" + this.amount + "','" + this.comment + "','"+ Act +"', '" + this.TransactionTime + "' );";
+        String sql = "INSERT INTO transaction (CLIENT_ACCAUNT, RECIPIENT, CASH, Comment, ACT, Time ) Values ('" + this.myAccount + "','" + this.receiverAccount + "','"+"-" + this.amount + "','" + this.comment + "','"+ Act +"', '" + this.TransactionTime + "' );";
         exec.exec_sql(sql);
     }
         private void InsertIntoForRecipient(){
         Data exec = new Data();
         String Act = "Received"; 
-        String sql = "INSERT INTO transaction (CLIENT_ACCAUNT, RECIPIENT, CASH, Comment, ACT, Time ) Values ('" + this.receiverAccount + "','" + this.myAccount + "','" + this.amount + "','" + this.comment + "','"+ Act +"' , '" + this.TransactionTime + "');";
+        String sql = "INSERT INTO transaction (CLIENT_ACCAUNT, RECIPIENT, CASH, Comment, ACT, Time ) Values ('" + this.receiverAccount + "','" + this.myAccount + "','"+"+" + this.amount + "','" + this.comment + "','"+ Act +"' , '" + this.TransactionTime + "');";
         exec.exec_sql(sql);
     }
     private void GetCustomerData() {
