@@ -72,16 +72,25 @@
       </Events>
     </Component>
     <Component class="javax.swing.JTextField" name="CashField">
+      <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="CashFieldMouseClicked"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JRadioButton" name="DepostiMethod">
       <Properties>
         <Property name="text" type="java.lang.String" value="Deposit"/>
       </Properties>
+      <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="DepostiMethodMouseClicked"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JRadioButton" name="WithdrawMethod">
       <Properties>
         <Property name="text" type="java.lang.String" value="Withdraw"/>
       </Properties>
+      <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="WithdrawMethodMouseClicked"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel1">
       <Properties>

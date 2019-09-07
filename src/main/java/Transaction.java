@@ -146,9 +146,6 @@ public class Transaction extends javax.swing.JFrame {
         this.TransactionTime =  dateFormat.format(cal.getTime());
     }
     
-    
-
-    
     private void UpdateMyData(){
         Data exec = new Data();
         String sql = "Update users SET CASH = " + this.myAfterBalance + " where ID = " + this.id + ";";
