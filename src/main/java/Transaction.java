@@ -199,11 +199,6 @@ public class Transaction extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null,"User not found.");
                 break;
         }
-            Client client = new Client();
-            client.SetID(this.id);
-            client.CreateCustomerFrame();
-            client.setVisible(true);
-            dispose();
     }
     public void DoTransaction(){
         //Set Data
@@ -236,6 +231,12 @@ public class Transaction extends javax.swing.JFrame {
         //sql requests - insert into 
         InsertIntoForMe();
         InsertIntoForRecipient();
+        
+        Client client = new Client();
+        client.SetID(this.id);
+        client.CreateCustomerFrame();
+        client.setVisible(true);
+        dispose();
     }
     
     @SuppressWarnings("unchecked")
