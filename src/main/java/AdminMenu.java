@@ -1,19 +1,21 @@
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Date;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
-
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- *
- * @author User
- */
 public class AdminMenu extends javax.swing.JFrame {
+    
+    /*-------------------------------------------------------------------*/
+        String url = "jdbc:mysql://localhost/bank_system";
+        String username = "root";
+        String password = "";
+    /*-------------------------------------------------------------------*/
     public String AdminName;
     private int AdminId;
     private String AdminPassword;
@@ -28,14 +30,14 @@ public class AdminMenu extends javax.swing.JFrame {
      * Creates new form AdminMenu
      */
     public AdminMenu() {
+               
         initComponents();
-        //Fill fields
         setNumber();
         setAccount();
-        getToday();        
+        getToday();  
+        getusersList();
+        Show_Users_IN_JTable();
     }
-
-    
 
     private void setId(int ID){
         this.AdminId = ID;
@@ -107,7 +109,43 @@ public class AdminMenu extends javax.swing.JFrame {
             admin = 0;
         }
         return admin;
+    }    
+    
+    private  ArrayList<User> getusersList(){
+        ArrayList<User> usersList=new ArrayList<>();             
+        try{
+            Connection conn = DriverManager.getConnection(url, username, password);
+            Statement stmt = conn.createStatement();
+            ResultSet rset = stmt.executeQuery ("SELECT * from users" );
+            User user;
+            while(rset.next()){
+                 user=new User(rset.getInt("ID"),rset.getString("FULLNAME"),rset.getString("CLIENT_NUM"),rset.getString("PASSWORD"),rset.getString("ACCOUNT"),rset.getString("CASH"),rset.getString("ADMIN"));
+                 usersList.add(user);
+            } 
+            stmt.close();
+            rset.close();
+        }catch (SQLException ex){
+        }
+        return usersList;
     }
+
+    private void Show_Users_IN_JTable(){
+        ArrayList<User> list = getusersList();
+        DefaultTableModel model= (DefaultTableModel)jTable1.getModel();
+        Object[] row=new Object[7];
+
+        for (int i=0;i<list.size();i++){
+            row[0]=list.get(i).getID();
+            row[1]=list.get(i).getName();
+            row[2]=list.get(i).getNumber();
+            row[3]=list.get(i).getPassword();
+            row[4]=list.get(i).getAccount();
+            row[5]=list.get(i).getCash();
+            row[6]=list.get(i).getAdmin();
+           model.addRow(row);
+          }
+    } 
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -345,7 +383,7 @@ public class AdminMenu extends javax.swing.JFrame {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Double.class, java.lang.Boolean.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false, false, false, false
@@ -357,6 +395,11 @@ public class AdminMenu extends javax.swing.JFrame {
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
             }
         });
         jScrollPane1.setViewportView(jTable1);
@@ -406,7 +449,6 @@ public class AdminMenu extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void ClearFieldsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ClearFieldsButtonActionPerformed
-        // TODO add your handling code here:
         ClearFields();
     }//GEN-LAST:event_ClearFieldsButtonActionPerformed
 
@@ -434,6 +476,8 @@ public class AdminMenu extends javax.swing.JFrame {
         // TODO add your handling code here:
         Data update = new Data();
         String sql = "Update users SET FULLNAME = '" + CustomerName.getText() + "' where ID = '" + CustomerIDField.getText() + "' ";
+        update.exec_sql(sql);
+        JOptionPane.showMessageDialog(null,"Operation completed successfully");
     }//GEN-LAST:event_UpdateActionActionPerformed
 
     private void DeleteActionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteActionActionPerformed
@@ -443,6 +487,7 @@ public class AdminMenu extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null,"ID is empty. Please edit ID field.");
         }else{
             String sql = "DELETE FROM users WHERE ID = '" + CustomerIDField.getText() + "'";
+            JOptionPane.showMessageDialog(null,"User with ID " + CustomerIDField.getText() + " has been deleted");
             delete.exec_sql(sql);
         }
     }//GEN-LAST:event_DeleteActionActionPerformed
@@ -473,6 +518,18 @@ public class AdminMenu extends javax.swing.JFrame {
         changePassword.setOldPassword( this.AdminPassword);
         changePassword.setVisible(true);
     }//GEN-LAST:event_jLabel2MouseClicked
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        // TODO add your handling code here:
+        int i=jTable1.getSelectedRow();
+        TableModel model=jTable1.getModel();
+        CustomerIDField.setText(model.getValueAt(i,0).toString());
+        CustomerName.setText(model.getValueAt(i,1).toString());
+        ClientNumberField.setText(model.getValueAt(i,2).toString());
+        CustomerPasswordField.setText(model.getValueAt(i,3).toString());
+        CustomerAccountField.setText(model.getValueAt(i,4).toString());
+        CustomerCashField.setText(model.getValueAt(i,5).toString());
+    }//GEN-LAST:event_jTable1MouseClicked
 
 
     public static void main(String args[]) {

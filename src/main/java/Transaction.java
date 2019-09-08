@@ -172,11 +172,16 @@ public class Transaction extends javax.swing.JFrame {
         try {
             Connection conn = DriverManager.getConnection(url, username, password);
             Statement stmt = conn.createStatement();
-            ResultSet rset = stmt.executeQuery ("SELECT ID, CASH from users where FULLNAME = '" + this.receiverName + "' AND ACCOUNT = '" + this.receiverAccount + "' " );
+            ResultSet rset = stmt.executeQuery ("SELECT ID, FULLNAME, CASH from users where FULLNAME = '" + this.receiverName + "' AND ACCOUNT = '" + this.receiverAccount + "' " );
             while(rset.next()){
                 this.receiverID = Integer.valueOf( rset.getString("ID") );
                 this.receiverBalance = Double.valueOf( rset.getString("CASH") );
+                this.receiverName = rset.getString("FULLNAME");
             }
+            if( this.receiverName != NameField.getText() ){
+                this.error = 6;
+            }
+            
         } catch (SQLException ex) {
             Logger.getLogger(DepositFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -243,6 +248,7 @@ public class Transaction extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel1 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -254,6 +260,9 @@ public class Transaction extends javax.swing.JFrame {
         MyAccountField = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         CommnetField = new javax.swing.JTextField();
+        BackButton = new javax.swing.JButton();
+
+        jLabel1.setText("jLabel1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -276,6 +285,14 @@ public class Transaction extends javax.swing.JFrame {
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
+            }
+        });
+
+        BackButton.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        BackButton.setText("Back");
+        BackButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BackButtonActionPerformed(evt);
             }
         });
 
@@ -307,8 +324,11 @@ public class Transaction extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(CommnetField, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButton1)))
+                        .addGap(107, 107, 107)
+                        .addComponent(BackButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton1)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -334,7 +354,9 @@ public class Transaction extends javax.swing.JFrame {
                     .addComponent(jLabel5)
                     .addComponent(CommnetField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(75, 75, 75)
-                .addComponent(jButton1)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(BackButton))
                 .addContainerGap(30, Short.MAX_VALUE))
         );
 
@@ -358,6 +380,15 @@ public class Transaction extends javax.swing.JFrame {
         EchoData();
         dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void BackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackButtonActionPerformed
+            Client client = new Client();
+            //create Client Object
+            client.SetID(this.id);
+            client.CreateCustomerFrame();
+            client.setVisible(true);
+            dispose();
+    }//GEN-LAST:event_BackButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -397,10 +428,12 @@ public class Transaction extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField AccountField;
     private javax.swing.JTextField AmountField;
+    private javax.swing.JButton BackButton;
     private javax.swing.JTextField CommnetField;
     private javax.swing.JLabel MyAccountField;
     private javax.swing.JTextField NameField;
     private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

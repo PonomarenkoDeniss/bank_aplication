@@ -16,6 +16,7 @@ public class Settings extends javax.swing.JFrame {
     public static int id;
     
     private String sql;
+    private int error;
     /**
      * Creates new form Settings
      */
@@ -34,6 +35,7 @@ public class Settings extends javax.swing.JFrame {
         System.out.println("-------------------------------------");
         System.out.println("SETTINGS->ID->  " + this.id);
         System.out.println("SETTINGS->PASSWORD->  " + this.OldPassword);
+        System.out.println("SETTINGS->PASSWORD LENGHT->  " + NewPasswordFiled.getText().length());
         System.out.println("-------------------------------------");
         System.out.println("");
     }
@@ -43,8 +45,22 @@ public class Settings extends javax.swing.JFrame {
         String OldPasswordFromField = OldPasswordFiled.getText();
         String Pass = check_pwd.GetHashingPassword(OldPasswordFromField);
         if ( !Pass.equals(this.OldPassword)){
-            JOptionPane.showMessageDialog(null,"Invalid password");
-        }else{
+            this.error = 3;
+            NewPasswordFiled.setText("");
+            JOptionPane.showMessageDialog(null,"Invalid password.");
+        }
+        else if(  NewPasswordFiled.getText() == OldPasswordFiled.getText() ){
+            this.error = 2;
+            NewPasswordFiled.setText("");
+            JOptionPane.showMessageDialog(null,"New password must be different from previous.");
+        }
+        else if( NewPasswordFiled.getText().length() < 10 ){
+            this.error = 1;
+            NewPasswordFiled.setText("");
+            JOptionPane.showMessageDialog(null,"Minimum password length is 10 characters.");
+        }
+        else{
+            this.error = 0;
             JOptionPane.showMessageDialog(null,"Password changed successfully");
         }
     }
@@ -60,7 +76,7 @@ public class Settings extends javax.swing.JFrame {
         String sql = "Update users SET PASSWORD = '" + updatePass.GetHashingPassword( NewPasswordFiled.getText() ) + "' where ID = '" +  this.id + "' ";
         updatePass.exec_sql(sql);   
     }
-    
+      
     
     
     
@@ -79,6 +95,8 @@ public class Settings extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        BackButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -96,21 +114,34 @@ public class Settings extends javax.swing.JFrame {
             }
         });
 
+        jButton2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jButton2.setText("Back");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(NewPasswordFiled, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(OldPasswordFiled, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                .addGap(14, 14, 14))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(45, 45, 45))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -124,9 +155,19 @@ public class Settings extends javax.swing.JFrame {
                     .addComponent(NewPasswordFiled, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
                 .addGap(18, 18, 18)
-                .addComponent(jButton1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
+
+        BackButton.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        BackButton.setText("Back");
+        BackButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BackButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -134,11 +175,21 @@ public class Settings extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(25, Short.MAX_VALUE))
+                .addContainerGap(21, Short.MAX_VALUE))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(115, 115, 115)
+                    .addComponent(BackButton)
+                    .addContainerGap(116, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(42, 42, 42)
+                    .addComponent(BackButton)
+                    .addContainerGap(49, Short.MAX_VALUE)))
         );
 
         pack();
@@ -149,13 +200,34 @@ public class Settings extends javax.swing.JFrame {
         
         getPasswordFiled();
         GetNewPassword();
-        
         //execute sql
-        PasswordChange();
-        Data.exec_sql(this.sql);
+        if( this.error == 0 ){
+            PasswordChange();
+            Data.exec_sql(this.sql);
+        }
+        //echo test
+        EchoID();
         dispose();
         
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void BackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackButtonActionPerformed
+        Client client = new Client();
+        //create Client Object
+        client.SetID(this.id);
+        client.CreateCustomerFrame();
+        client.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_BackButtonActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        Client client = new Client();
+        //create Client Object
+        client.SetID(this.id);
+        client.CreateCustomerFrame();
+        client.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     
     
@@ -193,9 +265,11 @@ public class Settings extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton BackButton;
     private javax.swing.JPasswordField NewPasswordFiled;
     private javax.swing.JPasswordField OldPasswordFiled;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
