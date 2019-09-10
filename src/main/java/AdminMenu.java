@@ -174,8 +174,8 @@ public class AdminMenu extends javax.swing.JFrame {
         ClearFieldsButton = new javax.swing.JRadioButton();
         StatusField = new javax.swing.JCheckBox();
         jLabel1 = new javax.swing.JLabel();
-        CustomerIDField = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
+        CustomerIDField = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         HelloAdminLabel = new javax.swing.JLabel();
@@ -255,6 +255,7 @@ public class AdminMenu extends javax.swing.JFrame {
             }
         });
 
+        ClearFieldsButton.setText("Clear");
         ClearFieldsButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ClearFieldsButtonActionPerformed(evt);
@@ -264,14 +265,14 @@ public class AdminMenu extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel1.setText("ID");
 
-        CustomerIDField.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-
         jLabel2.setText("Password change");
         jLabel2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel2MouseClicked(evt);
             }
         });
+
+        CustomerIDField.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -309,9 +310,9 @@ public class AdminMenu extends javax.swing.JFrame {
                                         .addComponent(NameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(jLabel1))
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(CustomerName, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(CustomerIDField, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(CustomerName, javax.swing.GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE)
+                                        .addComponent(CustomerIDField, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(AddAction, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -329,13 +330,13 @@ public class AdminMenu extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(ClearFieldsButton)
-                    .addComponent(Theme))
-                .addGap(33, 33, 33)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(Theme)
+                    .addComponent(ClearFieldsButton))
+                .addGap(30, 30, 30)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(CustomerIDField))
+                    .addComponent(CustomerIDField, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(NameLabel)
@@ -403,6 +404,9 @@ public class AdminMenu extends javax.swing.JFrame {
             }
         });
         jScrollPane1.setViewportView(jTable1);
+        if (jTable1.getColumnModel().getColumnCount() > 0) {
+            jTable1.getColumnModel().getColumn(3).setHeaderValue("Password");
+        }
 
         HelloAdminLabel.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
 
@@ -475,9 +479,14 @@ public class AdminMenu extends javax.swing.JFrame {
     private void UpdateActionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UpdateActionActionPerformed
         // TODO add your handling code here:
         Data update = new Data();
-        String sql = "Update users SET FULLNAME = '" + CustomerName.getText() + "' where ID = '" + CustomerIDField.getText() + "' ";
-        update.exec_sql(sql);
-        JOptionPane.showMessageDialog(null,"Operation completed successfully");
+        if( CustomerIDField.getText().equals(null) || CustomerIDField.getText().equals("") ){
+            JOptionPane.showMessageDialog(null,"ID is empty. Please edit ID field.");
+        }else{
+            String sql = "Update users SET FULLNAME = '" + CustomerName.getText() + "' where ID = '" + CustomerIDField.getText() + "' ";
+            JOptionPane.showMessageDialog(null,"User with ID " + CustomerIDField.getText() + " has been deleted");
+            update.exec_sql(sql);
+        }
+          
     }//GEN-LAST:event_UpdateActionActionPerformed
 
     private void DeleteActionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteActionActionPerformed
@@ -575,7 +584,7 @@ public class AdminMenu extends javax.swing.JFrame {
     private javax.swing.JLabel ClientNumberField;
     private javax.swing.JLabel CustomerAccountField;
     private javax.swing.JLabel CustomerCashField;
-    private javax.swing.JTextField CustomerIDField;
+    private javax.swing.JLabel CustomerIDField;
     private javax.swing.JTextField CustomerName;
     private javax.swing.JLabel CustomerPasswordField;
     private javax.swing.JButton DeleteAction;

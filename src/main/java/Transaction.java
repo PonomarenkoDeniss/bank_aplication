@@ -45,9 +45,6 @@ public class Transaction extends javax.swing.JFrame {
     private String comment;
     private double amount;
     
-
-    
-    
     private int error;
 
     
@@ -87,6 +84,11 @@ public class Transaction extends javax.swing.JFrame {
         System.out.println("TRANSACTION->receiverBalance-> " + this.receiverBalance);
         System.out.println("---------------SELECT SQL-----------------");
         
+        
+        System.out.println("---------------ERROR-----------------");
+        System.out.println("TRANSACTION->error-> " + this.error);
+        System.out.println("---------------ERROR-----------------");
+        
         System.out.println("-------------------------------------");
         System.out.println("TRANSACTION->comment-> " + this.comment);
         System.out.println("TRANSACTION->myBeforeBalance-> " + this.myBeforeBalance);
@@ -117,13 +119,20 @@ public class Transaction extends javax.swing.JFrame {
     private void SetComment(){
         this.comment = CommnetField.getText();
     }
+
     
-    // block 2
-    private void CheckValidData(){
-        if( this.amount <= 0  ){
-            this.error = 2;                                                     //2 - not valid amount
-        }else{ this.error = 0;} 
+    private void sendYourself(){
+        if( AccountField.getText().equals(MyAccountField.getText ()) ){
+            this.error = 8;
+            JOptionPane.showMessageDialog(null,"You cant send money yourself.");
+        }
     }
+    
+    private void checkFileds(){
+        if( NameField.getText() == ""){ this.error = 8;}
+        if( AccountField.getText() == ""){this.error = 9;}
+        }
+    
     
     private void CheckMyBalance(){
         if( this.myBeforeBalance <= 0  || this.myBeforeBalance < this.amount ){
@@ -146,27 +155,37 @@ public class Transaction extends javax.swing.JFrame {
         this.TransactionTime =  dateFormat.format(cal.getTime());
     }
     
+    private void checkReceiver(){
+        if( receiverName == "" ){
+            this.error = 6;
+        }
+    }
+    
     private void UpdateMyData(){
         Data exec = new Data();
-        String sql = "Update users SET CASH = " + this.myAfterBalance + " where ID = " + this.id + ";";
-        exec.exec_sql(sql);
+        if(this.error == 0){
+            String sql = "Update users SET CASH = " + this.myAfterBalance + " where ID = " + this.id + ";";
+            exec.exec_sql(sql);
+            
+            sql = "Update users SET CASH = " + this.receiverAfterBalance + " where ID= " + this.receiverID + ";";
+            exec.exec_sql(sql);
+        }else{
+            JOptionPane.showMessageDialog(null,"CANT DO SQL REQUEST");
+        }
     }
-    private void UpdateReceiverData(){
+    private void InsertIntoForRecipient(){
         Data exec = new Data();
-        String sql = "Update users SET CASH = " + this.receiverAfterBalance + " where ID= " + this.receiverID + ";";
-        exec.exec_sql(sql);
-    }
-    private void InsertIntoForMe(){
-        Data exec = new Data();
-        String Act = "Send";
-        String sql = "INSERT INTO transaction (CLIENT_ACCAUNT, RECIPIENT, CASH, Comment, ACT, Time ) Values ('" + this.myAccount + "','" + this.receiverAccount + "','"+"-" + this.amount + "','" + this.comment + "','"+ Act +"', '" + this.TransactionTime + "' );";
-        exec.exec_sql(sql);
-    }
-        private void InsertIntoForRecipient(){
-        Data exec = new Data();
-        String Act = "Received"; 
-        String sql = "INSERT INTO transaction (CLIENT_ACCAUNT, RECIPIENT, CASH, Comment, ACT, Time ) Values ('" + this.receiverAccount + "','" + this.myAccount + "','"+"+" + this.amount + "','" + this.comment + "','"+ Act +"' , '" + this.TransactionTime + "');";
-        exec.exec_sql(sql);
+        if(this.error == 0){
+            String Act = "Received"; 
+            String sql = "INSERT INTO transaction (CLIENT_ACCAUNT, RECIPIENT, CASH, Comment, ACT, Time ) Values ('" + this.receiverAccount + "','" + this.myAccount + "','"+"+" + this.amount + "','" + this.comment + "','"+ Act +"' , '" + this.TransactionTime + "');";
+            exec.exec_sql(sql);
+            Act = "Send";
+            sql = "INSERT INTO transaction (CLIENT_ACCAUNT, RECIPIENT, CASH, Comment, ACT, Time ) Values ('" + this.myAccount + "','" + this.receiverAccount + "','"+"-" + this.amount + "','" + this.comment + "','"+ Act +"', '" + this.TransactionTime + "' );";
+            exec.exec_sql(sql);
+        }else{
+            JOptionPane.showMessageDialog(null,"CANT DO SQL REQUEST");
+        }
+
     }
     private void GetCustomerData() {
         try {
@@ -178,34 +197,20 @@ public class Transaction extends javax.swing.JFrame {
                 this.receiverBalance = Double.valueOf( rset.getString("CASH") );
                 this.receiverName = rset.getString("FULLNAME");
             }
+                    System.out.println("----------Receiver data---------------");
+                    System.out.println("TRANSACTION->receiver"+ rset);
+                    System.out.println("----------Receiver data---------------"); 
             if( this.receiverName != NameField.getText() ){
                 this.error = 6;
             }
-            
         } catch (SQLException ex) {
             Logger.getLogger(DepositFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    private void GetErrorText(){
-        switch(this.error){
-            case 0: 
-                JOptionPane.showMessageDialog(null,"you transferred " + this.amount + "$ to " + this.receiverName + " ");
-                break;
-            case 2:
-                JOptionPane.showMessageDialog(null,"Not valid amount");
-                break;
-            case 5:
-                JOptionPane.showMessageDialog(null,"Not enough funds in the account, please deposit money to the account");
-                break;
-            case 6:
-                JOptionPane.showMessageDialog(null,"Receiver not found.");
-                break;
-            case 7:
-                JOptionPane.showMessageDialog(null,"User not found.");
-                break;
-        }
-    }
+
     public void DoTransaction(){
+        checkFileds();
+                
         //Set Data
         SetAmount();
         SetAccount();
@@ -215,33 +220,43 @@ public class Transaction extends javax.swing.JFrame {
         //get now()
         GetDataAndTime();
         
-        
         //check data valid
-        CheckValidData();
         CheckMyBalance();
+        sendYourself();
+        
         //Data from DB
         GetCustomerData();
+        checkReceiver();
         
-        //do math operation
-        MyAfterBalance();
-        ReceiverAfterBalance();
-        
-        //Error text JOpenPane
-        GetErrorText();
-        
-        //sql requests - update
-        UpdateMyData();
-        UpdateReceiverData();
-        
-        //sql requests - insert into 
-        InsertIntoForMe();
-        InsertIntoForRecipient();
-        
-        Client client = new Client();
-        client.SetID(this.id);
-        client.CreateCustomerFrame();
-        client.setVisible(true);
-        dispose();
+        switch(this.error){
+            case 0:
+                MyAfterBalance();
+                ReceiverAfterBalance();
+                
+                UpdateMyData();
+                InsertIntoForRecipient();
+                
+                Client client = new Client();
+                JOptionPane.showMessageDialog(null,"you transferred " + this.amount + "$ to " + this.receiverName + " ");
+                
+                client.SetID(this.id);
+                client.CreateCustomerFrame();
+                client.setVisible(true); 
+                dispose();
+                break;
+            case 5:
+                JOptionPane.showMessageDialog(null,"Not enough funds in the account, please deposit money to the account");
+                break;
+            case 6:
+                JOptionPane.showMessageDialog(null,"User not found");
+                break;
+            case 8:
+                JOptionPane.showMessageDialog(null,"Name is empty");
+                break;
+            case 9:
+                JOptionPane.showMessageDialog(null,"Account is empty");
+                break;
+        }
     }
     
     @SuppressWarnings("unchecked")
@@ -375,10 +390,8 @@ public class Transaction extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
         DoTransaction();
         EchoData();
-        dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void BackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackButtonActionPerformed
