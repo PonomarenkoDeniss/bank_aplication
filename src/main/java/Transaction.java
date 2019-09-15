@@ -37,7 +37,7 @@ public class Transaction extends javax.swing.JFrame {
     private double myBeforeBalance;
     private double myAfterBalance;
 
-    private int receiverID;
+    private String receiverID;
     private String receiverName;
     private String receiverAccount;
     private double receiverBalance;
@@ -124,7 +124,6 @@ public class Transaction extends javax.swing.JFrame {
     private void sendYourself(){
         if( AccountField.getText().equals(MyAccountField.getText ()) ){
             this.error = 8;
-            JOptionPane.showMessageDialog(null,"You cant send money yourself.");
         }
     }
     
@@ -137,7 +136,7 @@ public class Transaction extends javax.swing.JFrame {
     private void CheckMyBalance(){
         if( this.myBeforeBalance <= 0  || this.myBeforeBalance < this.amount ){
             this.error = 5;                                                     //5 - no money
-        }else{ this.error = 0;}                                                 //0 - OK
+        }
     }
     
     
@@ -156,36 +155,28 @@ public class Transaction extends javax.swing.JFrame {
     }
     
     private void checkReceiver(){
-        if( receiverName == "" ){
+        if( receiverID == null ){
             this.error = 6;
         }
     }
     
     private void UpdateMyData(){
         Data exec = new Data();
-        if(this.error == 0){
-            String sql = "Update users SET CASH = " + this.myAfterBalance + " where ID = " + this.id + ";";
-            exec.exec_sql(sql);
-            
-            sql = "Update users SET CASH = " + this.receiverAfterBalance + " where ID= " + this.receiverID + ";";
-            exec.exec_sql(sql);
-        }else{
-            JOptionPane.showMessageDialog(null,"CANT DO SQL REQUEST");
-        }
+        String sql = "Update users SET CASH = " + this.myAfterBalance + " where ID = " + this.id + ";";
+        exec.exec_sql(sql);
+
+        sql = "Update users SET CASH = " + this.receiverAfterBalance + " where ID= " + this.receiverID + ";";
+        exec.exec_sql(sql);
     }
+    
     private void InsertIntoForRecipient(){
         Data exec = new Data();
-        if(this.error == 0){
-            String Act = "Received"; 
-            String sql = "INSERT INTO transaction (CLIENT_ACCAUNT, RECIPIENT, CASH, Comment, ACT, Time ) Values ('" + this.receiverAccount + "','" + this.myAccount + "','"+"+" + this.amount + "','" + this.comment + "','"+ Act +"' , '" + this.TransactionTime + "');";
-            exec.exec_sql(sql);
-            Act = "Send";
-            sql = "INSERT INTO transaction (CLIENT_ACCAUNT, RECIPIENT, CASH, Comment, ACT, Time ) Values ('" + this.myAccount + "','" + this.receiverAccount + "','"+"-" + this.amount + "','" + this.comment + "','"+ Act +"', '" + this.TransactionTime + "' );";
-            exec.exec_sql(sql);
-        }else{
-            JOptionPane.showMessageDialog(null,"CANT DO SQL REQUEST");
-        }
-
+        String Act = "Received"; 
+        String sql = "INSERT INTO transaction (CLIENT_ACCAUNT, RECIPIENT, CASH, Comment, ACT, Time ) Values ('" + this.receiverAccount + "','" + this.myAccount + "','"+"+" + this.amount + "','" + this.comment + "','"+ Act +"' , '" + this.TransactionTime + "');";
+        exec.exec_sql(sql);
+        Act = "Send";
+        sql = "INSERT INTO transaction (CLIENT_ACCAUNT, RECIPIENT, CASH, Comment, ACT, Time ) Values ('" + this.myAccount + "','" + this.receiverAccount + "','"+"-" + this.amount + "','" + this.comment + "','"+ Act +"', '" + this.TransactionTime + "' );";
+        exec.exec_sql(sql);
     }
     private void GetCustomerData() {
         try {
@@ -193,15 +184,9 @@ public class Transaction extends javax.swing.JFrame {
             Statement stmt = conn.createStatement();
             ResultSet rset = stmt.executeQuery ("SELECT ID, FULLNAME, CASH from users where FULLNAME = '" + this.receiverName + "' AND ACCOUNT = '" + this.receiverAccount + "' " );
             while(rset.next()){
-                this.receiverID = Integer.valueOf( rset.getString("ID") );
+                this.receiverID = rset.getString("ID");
                 this.receiverBalance = Double.valueOf( rset.getString("CASH") );
                 this.receiverName = rset.getString("FULLNAME");
-            }
-                    System.out.println("----------Receiver data---------------");
-                    System.out.println("TRANSACTION->receiver"+ rset);
-                    System.out.println("----------Receiver data---------------"); 
-            if( this.receiverName != NameField.getText() ){
-                this.error = 6;
             }
         } catch (SQLException ex) {
             Logger.getLogger(DepositFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -228,6 +213,17 @@ public class Transaction extends javax.swing.JFrame {
         GetCustomerData();
         checkReceiver();
         
+        //check empty field
+        
+        if( "".equals(AccountField.getText()) ){
+            this.error = 9;
+        }
+        if( "".equals(NameField.getText()) ){
+            this.error = 10;
+        }
+        if( "".equals(AmountField.getText()) ){
+            this.error = 11;
+        }
         switch(this.error){
             case 0:
                 MyAfterBalance();
@@ -251,10 +247,16 @@ public class Transaction extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null,"User not found");
                 break;
             case 8:
-                JOptionPane.showMessageDialog(null,"Name is empty");
+                JOptionPane.showMessageDialog(null,"You cant send money yourself.");
                 break;
             case 9:
-                JOptionPane.showMessageDialog(null,"Account is empty");
+                JOptionPane.showMessageDialog(null,"Number is empty");
+                break;
+            case 10:
+                JOptionPane.showMessageDialog(null,"Name is empty");
+                break;
+            case 11:
+                JOptionPane.showMessageDialog(null,"Cash is empty");
                 break;
         }
     }
@@ -390,8 +392,7 @@ public class Transaction extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        DoTransaction();
-        EchoData();
+            DoTransaction();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void BackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackButtonActionPerformed
